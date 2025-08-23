@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://b8x75mfha5vkc"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ryoud"]
+friction = 28.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ryoud"]
+size = Vector2(1259, 99)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_oj3tl"]
+
+[node name="StaticBody2D" type="StaticBody2D"]
+physics_material_override = SubResource("PhysicsMaterial_ryoud")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ryoud")
+
+[node name="Sprite2D" type="Sprite2D" parent="CollisionShape2D"]
+position = Vector2(-1.52588e-05, 2.27374e-13)
+scale = Vector2(1297.4, -98.2016)
+texture = SubResource("PlaceholderTexture2D_oj3tl")
