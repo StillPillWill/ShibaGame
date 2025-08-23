@@ -33,99 +33,91 @@ var buffer_timer = 0.0
 
 # Private variables
 var player_direction = 1
-var hit_offset_x = 0.0 # absolute x offset to mirror
 
 func _ready():
+	# This connects the animation signal via code, which is reliable.
+	# It correctly passes the animation name to the function.
 	$AnimatedSprite2D.animation_finished.connect(_on_animation_finished)
 	$AnimatedSprite2D.animation = "idle"
 
+	# Connect the signal from our "Hit" Area2D to detect when we hit an enemy.
 	$Hit.body_entered.connect(_on_hit_body_entered)
+	# Start with the hitbox disabled.
 	$Hit/CollisionShape2D.disabled = true
 
-	# cache absolute hit offset so we can mirror reliably
-	hit_offset_x = abs($Hit.position.x)
 
 func _physics_process(delta: float) -> void:
-	# --- Dash ---
+	# --- Handle dash state ---
 	if dash_timer > 0:
-		_process_dash(delta)
+		dash_timer -= delta
+		dash_override_timer -= delta
+		dash_gravity_timer = dash_gravity_delay
+
+		if dash_progress < dash_steps:
+			position += dash_dir * (dash_distance / dash_steps)
+			dash_progress += 1
+
+		if buffered_dash_input and dash_override_timer > 0:
+			dash_dir = buffered_dash_input.normalized()
+			dash_override_timer = dash_override_window
+			buffered_dash_input = null
+
+		move_and_slide()
+		handleAnimations()
 		return
 
-	# --- Attack state ---
+	# --- Handle attack state ---
 	if attacking:
+		# Apply gravity while attacking so the player doesn't float.
 		velocity.y += gravity * delta
-		_process_move_and_anim()
+		move_and_slide()
+		handleAnimations()
 		return
 
-	# --- Inputs ---
+	# --- Handle Inputs ---
 	handle_attack_input()
 	handle_dash_input(delta)
 
-	# --- Movement ---
+	# --- Normal Movement ---
 	var input_dir = Input.get_axis("ui_left", "ui_right")
 
 	if input_dir != 0:
 		velocity.x = move_toward(velocity.x, input_dir * speed, accel * delta)
-		var new_dir = int(sign(input_dir))
-		if new_dir != player_direction:
-			player_direction = new_dir
-			_flip_visuals_and_hitbox()
-		$AnimatedSprite2D.flip_h = (player_direction < 0)
+		player_direction = sign(input_dir)
+		$AnimatedSprite2D.flip_h = (input_dir < 0)
 	else:
+		# Apply more friction when stopping for a snappier feel.
 		velocity.x = move_toward(velocity.x, 0, accel * delta * 5)
-	# Gravity
+
+	# --- Vertical Movement & Gravity ---
+	# Apply gravity only when in the air. This prevents jitter on slopes.
 	if not is_on_floor():
 		velocity.y += gravity * delta
+		# Add a little extra gravity when falling for better game feel
 		if velocity.y > 0:
 			velocity.y += 20
-
-	# Jump
+	
+	# Jump Input
 	if is_on_floor() and Input.is_action_just_pressed("ui_up"):
 		velocity.y = -jump_speed
 		attacking = false
-
-	# Fast-fall
+	
+	# Fast-fall Input
 	if Input.is_action_pressed("ui_down"):
 		velocity.y += 50
 
-	# Wrap
+	# --- Wrap-around screen ---
 	if position.x < 0:
 		position.x = screen_width
 	if position.x > screen_width:
 		position.x = 0
 
-	
-	_process_move_and_anim()
-	past_dir=player_direction
-# --- helpers ---
-var past_dir
-func _flip_visuals_and_hitbox() -> void:
-	# flip sprite visually
-	$AnimatedSprite2D.flip_h = (player_direction < 0)
-	# mirror hitbox by moving its position.x rather than scaling
-	$Hit/CollisionShape2D.position.x = hit_offset_x * player_direction
-
-func _process_move_and_anim() -> void:
+	# --- Final move call ---
 	move_and_slide()
 	handleAnimations()
 
-func _process_dash(delta: float) -> void:
-	dash_timer -= delta
-	dash_override_timer -= delta
-	dash_gravity_timer = dash_gravity_delay
 
-	if dash_progress < dash_steps:
-		position += dash_dir * (dash_distance / dash_steps)
-		dash_progress += 1
-
-	if buffered_dash_input and dash_override_timer > 0:
-		dash_dir = buffered_dash_input.normalized()
-		dash_override_timer = dash_override_window
-		buffered_dash_input = null
-
-	_process_move_and_anim()
-
-# --- input handlers ---
+# --- Input Handling Functions ---
 
 func handle_attack_input():
 	if Input.is_action_just_pressed("F") and not attacking:
@@ -144,7 +136,7 @@ func handle_dash_input(delta: float):
 	if new_dash_input != Vector2.ZERO:
 		if dash_timer <= 0:
 			start_dash(new_dash_input.normalized())
-		else:
+		else: # Buffer the input
 			buffered_dash_input = new_dash_input
 			buffer_timer = input_buffer_time
 
@@ -153,13 +145,14 @@ func handle_dash_input(delta: float):
 		if buffer_timer <= 0:
 			buffered_dash_input = null
 
-# --- state changes ---
+
+# --- State-changing Functions ---
 
 func attack():
 	velocity.x += attack_lunge_speed * player_direction
 	attacking = true
 	can_dash = false
-	$Hit/CollisionShape2D.disabled = false
+	$Hit/CollisionShape2D.disabled = false # Enable hitbox on attack
 	$AnimatedSprite2D.play("attack")
 
 func start_dash(dir: Vector2):
@@ -170,27 +163,35 @@ func start_dash(dir: Vector2):
 	velocity *= 0.1
 	dash_gravity_timer = dash_gravity_delay
 
-# --- animations ---
+
+# --- Animations and Signals ---
 
 func handleAnimations():
 	if attacking:
 		return
+
 	if not is_on_floor():
 		pass
 	elif abs(velocity.x) > 1:
 		$AnimatedSprite2D.play("walk")
-		$AnimatedSprite2D.sprite_frames.set_animation_speed("walk", abs(velocity.x)/50)
+		$AnimatedSprite2D.sprite_frames.set_animation_speed("walk", abs(velocity.x) / 50)
 	else:
 		$AnimatedSprite2D.play("idle")
 
-func _on_animation_finished(anim_name: String = "") -> void:
-	var name = anim_name if anim_name != "" else $AnimatedSprite2D.animation
-	if name == "attack":
+
+# This function now correctly receives the animation name.
+func _on_animation_finished(anim_name):
+	# We check if the animation that just finished is the "attack" one.
+	if anim_name == "attack":
+		# If it is, we reset the player's state to unlock their controls.
 		attacking = false
 		can_dash = true
-		$Hit/CollisionShape2D.disabled = true
+		$Hit/CollisionShape2D.disabled = true # Disable hitbox after attack
 		$AnimatedSprite2D.play("idle")
 
+
+# This function handles the attack hitting an enemy.
 func _on_hit_body_entered(body):
+	# Check if the body we hit has a "hit" method (our enemy does).
 	if body.has_method("hit"):
 		body.hit()

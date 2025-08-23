@@ -6,7 +6,7 @@ var gravity = 1000
 var inRange=false
 # Attack
 var is_hit = false
-
+var hp=3
 var player
 
 func _ready():
@@ -19,18 +19,22 @@ func _ready():
 
 func _physics_process(delta: float) -> void:
 	if player.attacking and inRange and not is_hit:
-		velocity.y=-50
-		velocity.x-=50*player.playerDirection
 		print("hit")
 		hit()
 	velocity.y+=gravity*delta
 	if player.attacking and inRange:
 		print("f")
-
+	if velocity.x>0:
+		velocity.x-=10
+	if velocity.x<0:
+		velocity.x+=10
+	if position.x<0:
+		position.x=1152
+	if position.x>1152:
+		position.x=0
 	# --- Move player ---
 	move_and_slide()
 	handleAnimations()
-
 
 func handleAnimations():
 	var horizontal_speed = abs(velocity.x)
@@ -48,21 +52,26 @@ func _on_animation_finished():
 func _on_attack_hitbox_body_entered(body):
 	if body.name == "Zoomer":
 		inRange=true
-		print("f")
 
 func _on_attack_hitbox_body_exited(body):
 	if body.name == "Zoomer":
 		inRange=false
-		print("fv")
 func hit():
 	if is_hit:
 		return # already flashing, don't restart
 	is_hit = true
-
+	velocity.y-=200
+	velocity.x+= player.player_direction*200
 	modulate = Color(1, 0, 0) # turn red
-
+	hp-=1
+	if hp==0:
+		dead()
 	# Wait 1 second without freezing physics/game
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(.3).timeout
 
 	modulate = Color(1, 1, 1) # back to normal
 	is_hit = false
+func dead():
+	hp=3
+	position.y=-1000
+	position.x=randi_range(0,1160)
