@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmhdkb1y5lxy6"]
+
+[ext_resource type="Script" uid="uid://cjaguy7xissq0" path="res://stickman.gd" id="1_qlvw8"]
+
+[node name="Stickman" type="Node2D"]
+script = ExtResource("1_qlvw8")
+
+[node name="Skeleton2D" type="Skeleton2D" parent="."]
+
+[node name="Bone2D" type="Bone2D" parent="Skeleton2D"]
+
+[node name="Line2D" type="Line2D" parent="Skeleton2D/Bone2D"]
+points = PackedVector2Array(0, 0, 0, -97)
+
+[node name="Bone2D2" type="Bone2D" parent="Skeleton2D"]
+visible = false
+position = Vector2(20, 0)
+
+[node name="Line2D" type="Line2D" parent="Skeleton2D/Bone2D2"]
+position = Vector2(15, 0)
+points = PackedVector2Array(0, 0, 0, -7, 0, -97)

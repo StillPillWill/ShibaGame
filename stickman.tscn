@@ -1,0 +1,128 @@
+[gd_scene format=3 uid="uid://bmhdkb1y5lxy6"]
+
+[node name="Stickman" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0.592683, -0.176335)
+rotation = -1.5708
+scale = Vector2(1.34886, 0.625348)
+
+[node name="Skeleton2D" type="Skeleton2D" parent="."]
+
+[node name="Head" type="Bone2D" parent="Skeleton2D"]
+rotation = -1.5708
+rest = Transform2D(-4.37114e-08, -1, 1, -4.37114e-08, 0, 0)
+auto_calculate_length_and_angle = false
+length = 15.0
+bone_angle = 0.0
+
+[node name="Torso" type="Bone2D" parent="Skeleton2D/Head"]
+position = Vector2(-15, 0)
+rotation = -1.5708
+rest = Transform2D(-1.62921e-07, -1, 1, -1.62921e-07, -15, 0)
+auto_calculate_length_and_angle = false
+length = 10.0
+bone_angle = -90.0
+
+[node name="Torso" type="Bone2D" parent="Skeleton2D/Head/Torso"]
+position = Vector2(0, -10)
+rotation = 1.46182
+scale = Vector2(1, 1)
+rest = Transform2D(-4.37114e-08, 1, -1, -4.37114e-08, 0, -10)
+auto_calculate_length_and_angle = false
+length = 10.0
+bone_angle = 180.0
+
+[node name="Torso" type="Bone2D" parent="Skeleton2D/Head/Torso/Torso"]
+position = Vector2(-10, -3.69553e-06)
+rotation = 1.5708
+rest = Transform2D(-4.37114e-08, 1, -1, -4.37114e-08, -10, -3.69553e-06)
+auto_calculate_length_and_angle = false
+length = 10.0
+bone_angle = 90.0
+
+[node name="Pelvis" type="Bone2D" parent="Skeleton2D/Head/Torso/Torso/Torso"]
+position = Vector2(0, 10)
+rest = Transform2D(1, 0, 0, 1, 0, 10)
+auto_calculate_length_and_angle = false
+length = 20.0
+bone_angle = 90.0
+
+[node name="Left_Leg" type="Bone2D" parent="Skeleton2D/Head/Torso/Torso/Torso/Pelvis"]
+position = Vector2(-20, 20)
+rotation = 1.5708
+scale = Vector2(1, 1)
+rest = Transform2D(-4.37114e-08, 1, -1, -4.37114e-08, -20, 20)
+auto_calculate_length_and_angle = false
+length = 15.0
+bone_angle = 0.0
+
+[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Head/Torso/Torso/Torso/Pelvis/Left_Leg"]
+position = Vector2(20, 0)
+rotation = -1.5708
+rest = Transform2D(-4.37114e-08, -1, 1, -4.37114e-08, 20, 0)
+auto_calculate_length_and_angle = false
+length = 10.0
+bone_angle = 0.0
+
+[node name="Right_Leg" type="Bone2D" parent="Skeleton2D/Head/Torso/Torso/Torso/Pelvis"]
+position = Vector2(20, 20)
+rotation = 1.5708
+rest = Transform2D(-4.37114e-08, 1, -1, -4.37114e-08, 20, 20)
+auto_calculate_length_and_angle = false
+length = 15.0
+bone_angle = 0.0
+
+[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Head/Torso/Torso/Torso/Pelvis/Right_Leg"]
+position = Vector2(20, 0)
+rotation = -1.5708
+rest = Transform2D(-4.37114e-08, -1, 1, -4.37114e-08, 20, 0)
+auto_calculate_length_and_angle = false
+length = 10.0
+bone_angle = 0.0
+
+[node name="Right_Arm" type="Bone2D" parent="Skeleton2D/Head/Torso"]
+position = Vector2(-15, 0)
+scale = Vector2(1, 1)
+rest = Transform2D(1, 0, 0, 1, -15, 0)
+auto_calculate_length_and_angle = false
+length = 15.0
+bone_angle = 0.0
+
+[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Head/Torso/Right_Arm"]
+position = Vector2(-15, -5.24521e-06)
+rotation = 1.5708
+rest = Transform2D(-4.37114e-08, 1, -1, -4.37114e-08, -15, -5.24521e-06)
+auto_calculate_length_and_angle = false
+length = 10.0
+bone_angle = 90.0
+
+[node name="Left_Arm" type="Bone2D" parent="Skeleton2D/Head/Torso"]
+position = Vector2(15, 0)
+scale = Vector2(1, 1)
+rest = Transform2D(1, 0, 0, 1, 15, 0)
+auto_calculate_length_and_angle = false
+length = 15.0
+bone_angle = 0.0
+
+[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Head/Torso/Left_Arm"]
+position = Vector2(15, 0)
+rotation = 1.5708
+rest = Transform2D(-4.37114e-08, 1, -1, -4.37114e-08, 15, 0)
+auto_calculate_length_and_angle = false
+length = 10.0
+bone_angle = -90.0
+
+[node name="HeadP" type="Polygon2D" parent="."]
+skeleton = NodePath("../Skeleton2D")
+polygon = PackedVector2Array(-4, 0, -4, 12, 0, 15, 4, 12, 4, 0, 0, -3)
+uv = PackedVector2Array(-4, 0, -4, 12, 0, 15, 4, 12, 4, 0, 0, -3)
+bones = ["Head", PackedFloat32Array(1, 1, 1, 1, 1, 1), "Head/Torso", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Torso", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso/Pelvis", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso/Pelvis/Left_Leg", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso/Pelvis/Left_Leg/Bone2D", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso/Pelvis/Right_Leg", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso/Pelvis/Right_Leg/Bone2D", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Right_Arm", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Right_Arm/Bone2D", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Left_Arm", PackedFloat32Array(0, 0, 0, 0, 0, 0), "Head/Torso/Left_Arm/Bone2D", PackedFloat32Array(0, 0, 0, 0, 0, 0)]
+
+[node name="Torso" type="Polygon2D" parent="."]
+rotation = 0.000406964
+skeleton = NodePath("../Skeleton2D")
+polygon = PackedVector2Array(-6, 15, 6, 15, 5, 22, 5, 27, 5, 32, 5, 37, 4, 45, 0, 49, -4, 45, -5, 37, -5, 32, -5, 27, -5, 22)
+uv = PackedVector2Array(-6, 15, 6, 15, 5, 22, 5, 27, 5, 32, 5, 37, 4, 45, 0, 49, -4, 45, -5, 37, -5, 32.3344, -5, 27, -5, 22)
+polygons = [PackedInt32Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)]
+bones = ["Head", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Head/Torso", PackedFloat32Array(0.76, 0.76, 0.76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.76), "Head/Torso/Torso", PackedFloat32Array(0, 0, 0, 0.76, 0.76, 0, 0, 0, 0, 0, 0.76, 0.76, 0), "Head/Torso/Torso/Torso", PackedFloat32Array(0, 0, 0, 0, 0.76, 0.76, 0.76, 0, 0.76, 0.76, 0.76, 0, 0), "Head/Torso/Torso/Torso/Pelvis", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso/Pelvis/Left_Leg", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso/Pelvis/Left_Leg/Bone2D", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso/Pelvis/Right_Leg", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Head/Torso/Torso/Torso/Pelvis/Right_Leg/Bone2D", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Head/Torso/Right_Arm", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Head/Torso/Right_Arm/Bone2D", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Head/Torso/Left_Arm", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Head/Torso/Left_Arm/Bone2D", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)]

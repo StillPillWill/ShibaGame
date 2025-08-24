@@ -7,15 +7,17 @@
 
 [node name="Node2D" type="Node2D"]
 
-[node name="StaticBody2D2" parent="." instance=ExtResource("3_0hol4")]
-position = Vector2(593, 668)
-
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-6, -3)
 script = ExtResource("4_0hol4")
 
 [node name="Enemy" parent="." instance=ExtResource("5_q6r6c")]
 position = Vector2(618, 323)
+script = null
 
 [node name="Zoomer" parent="." instance=ExtResource("1_wtcfe")]
 position = Vector2(490, 328)
+script = null
+
+[node name="StaticBody2D" parent="." instance=ExtResource("3_0hol4")]
+position = Vector2(582, 651)
