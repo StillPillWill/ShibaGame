@@ -1,6 +1,6 @@
-[gd_scene load_steps=40 format=3 uid="uid://cpsvpm2q4pucy"]
+[gd_scene load_steps=41 format=3 uid="uid://cpsvpm2q4pucy"]
 
-[ext_resource type="Script" uid="uid://dvhtk7nh1muwm" path="res://move.gd" id="1_6c143"]
+[ext_resource type="Script" uid="uid://b5b3sssgfgdsp" path="res://scripts/move.gd" id="1_6c143"]
 [ext_resource type="Texture2D" uid="uid://b0iwc6o0ggcr" path="res://images/Girl_1/Idle.png" id="1_6tfq4"]
 [ext_resource type="Texture2D" uid="uid://cbgof306gav0y" path="res://images/Girl_1/Attack.png" id="1_b2g5c"]
 [ext_resource type="Texture2D" uid="uid://b5sqdigodk6hd" path="res://images/Girl_1/Walk.png" id="2_b2g5c"]
@@ -79,11 +79,11 @@ region = Rect2(1024, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fo6tf"]
 atlas = ExtResource("4_6c143")
-region = Rect2(0, 0, 121, 128)
+region = Rect2(118, 0, 121, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lmdn0"]
 atlas = ExtResource("4_6c143")
-region = Rect2(121, 0, 121, 128)
+region = Rect2(0, 0, 106, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m0xs8"]
 atlas = ExtResource("2_b2g5c")
@@ -196,21 +196,21 @@ animations = [{
 "name": &"idle",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
-"name": &"kick",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_fo6tf")
+}],
+"loop": false,
+"name": &"kick",
+"speed": 1.0
 }, {
+"frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_lmdn0")
 }],
 "loop": false,
 "name": &"punch",
-"speed": 5.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -255,38 +255,35 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6tfq4"]
-size = Vector2(80, 61)
+size = Vector2(33.5, 41)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6c143"]
+size = Vector2(40, 30)
 
 [node name="Zoomer" type="CharacterBody2D"]
 script = ExtResource("1_6c143")
 metadata/_edit_horizontal_guides_ = [0.0]
 
-[node name="box" type="CollisionShape2D" parent="."]
-visible = false
+[node name="HurtBox" type="CollisionShape2D" parent="."]
 position = Vector2(-2.5, 32)
 shape = SubResource("RectangleShape2D_swdng")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_y47hn")
-animation = &"punch"
-frame_progress = 0.224203
+animation = &"kick"
 
-[node name="Hitarea" type="Area2D" parent="."]
-visible = false
-position = Vector2(-4, 32)
-scale = Vector2(1.4, 1)
-metadata/_edit_group_ = true
+[node name="PunchHitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 3
 
-[node name="Hitbox" type="CollisionShape2D" parent="Hitarea"]
-visible = false
-shape = SubResource("RectangleShape2D_swdng")
-
-[node name="Hit" type="Area2D" parent="."]
-visible = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hit"]
-position = Vector2(41, 33)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PunchHitbox"]
+position = Vector2(15.5, 17.5)
 shape = SubResource("RectangleShape2D_6tfq4")
 
-[connection signal="body_entered" from="Hit" to="." method="_on_hit_body_entered"]
-[connection signal="body_exited" from="Hit" to="." method="_on_hit_body_exited"]
+[node name="KickHitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KickHitbox"]
+position = Vector2(25, 42)
+shape = SubResource("RectangleShape2D_6c143")
