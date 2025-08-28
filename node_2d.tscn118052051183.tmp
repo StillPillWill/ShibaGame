@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=3 uid="uid://c0rv8jddtt55h"]
+
+[ext_resource type="PackedScene" uid="uid://cpsvpm2q4pucy" path="res://zoomer.tscn" id="1_wtcfe"]
+[ext_resource type="PackedScene" uid="uid://b8x75mfha5vkc" path="res://floor.tscn" id="3_0hol4"]
+[ext_resource type="Script" uid="uid://bvpp7rvpakf67" path="res://camera_2d.gd" id="4_0hol4"]
+[ext_resource type="PackedScene" uid="uid://cdaqa8au8bn4s" path="res://enemy.tscn" id="5_q6r6c"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q6r6c"]
+size = Vector2(1172, 20)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-6, -3)
+script = ExtResource("4_0hol4")
+
+[node name="Enemy" parent="." instance=ExtResource("5_q6r6c")]
+position = Vector2(584, 252)
+collision_layer = 9
+collision_mask = 9
+
+[node name="Zoomer" parent="." instance=ExtResource("1_wtcfe")]
+position = Vector2(415, 275)
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="."]
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4"]
+position = Vector2(574, -28)
+shape = SubResource("RectangleShape2D_q6r6c")
+
+[node name="Floor" parent="." instance=ExtResource("3_0hol4")]
+position = Vector2(595, 652)

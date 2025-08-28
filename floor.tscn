@@ -13,7 +13,9 @@ colors = PackedColorArray(1, 1, 1, 1, 0.342342, 0.342342, 0.342342, 1, 0, 0, 0, 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_oj3tl"]
 gradient = SubResource("Gradient_ryoud")
 
-[node name="StaticBody2D" type="StaticBody2D"]
+[node name="Floor" type="StaticBody2D"]
+collision_layer = 255
+collision_mask = 255
 physics_material_override = SubResource("PhysicsMaterial_ryoud")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
