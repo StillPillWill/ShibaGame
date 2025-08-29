@@ -100,3 +100,16 @@ collision_mask = 3
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(1, 29)
 shape = SubResource("RectangleShape2D_5hcft")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+visible = false
+position = Vector2(0, 64)
+rotation = -1.5708
+scale = Vector2(0.799999, 0.4)
+amount = 335
+emission_shape = 3
+emission_rect_extents = Vector2(29.61, 1)
+particle_flag_align_y = true
+spread = 52.8
+initial_velocity_max = 489.68
+linear_accel_max = 42.27

@@ -13,7 +13,16 @@ var animationState=["idle",0.5]
 var animationTimer={"PunchHitbox":0.5, "KickHitbox":1}
 var inRange={"KickHitbox":false, "PunchHitbox":false}
 var attackAnimation={"KickHitbox":"hitRight", "PunchHitbox": "hitRight", null:"idle"}
-var attackKnockback={"KickHitbox":Vector2(-400,500), "PunchHitbox":Vector2(-200,-400)}
+var playerDir=[0,0]
+var attackKnockback={
+"KickHitbox":Vector2(-400,500),
+"PunchHitbox":Vector2(-200,-400),
+"uppercut":Vector2(-100,-500),
+"lowercut":Vector2(-100,500),
+"straight":Vector2(-300,200),
+"verticalup":Vector2(-20,-800),
+"verticaldown":Vector2(-20,800)
+}
 var hitStun=0
 var justFloor
 var velocityBuffer=Vector2.ZERO
@@ -100,17 +109,38 @@ func _on_hitbox_area_exited(body: Node2D) -> void:
 	print("exited"+str(body))
 
 
-func attacked(attack):
-	if inRange[attack]:
-		hit(attack)
+func attacked(attack,direction):
 
-func hit(attack):
+		if inRange[attack]:
+			hit(attack,direction)
+			
+func attackName(attack, direction):
+	var attackName=""
+	if attack=="PunchHitbox":
+		if direction==[0,0] or [abs(direction[0]),direction[1]]==[1,0]:
+			attackName="straight"
+		elif direction[1]==1 and abs(direction[0])==1:
+			attackName="uppercut"
+		elif direction[1]==-1 and abs(direction[0])==1:
+			attackName="lowercut"
+		elif direction==[0,1]:
+			attackName="verticalup"
+		elif direction==[0,-1]:
+			attackName="verticaldown"
+		return attackName
+	else:
+		return attack
+	
+func hit(attack,direction):
+	print("hit")
+	playerDir=direction
 	player.comboCount+=1
 	if player.comboCount==4:
 		AudioManager.play_sfx(preload("res://sfx/shiba.mp3"))
 	animationState = [attack, animationTimer[attack]]
-	velocityBuffer.x += attackKnockback[attack].x * -1*sign(position.x - player.position.x)
-	velocityBuffer.y += attackKnockback[attack].y   # fixed
+	var attackName=attackName(attack,direction)
+	velocityBuffer.x += attackKnockback[attackName].x * -1*sign(position.x - player.position.x)
+	velocityBuffer.y += attackKnockback[attackName].y   # fixed
 	if attack == "PunchHitbox":
 		velocityBuffer.y += player.velocity.y
 		print("super")
@@ -120,13 +150,13 @@ func hit(attack):
 	if attack=="KickHitbox":
 		velocityBuffer.x += player.velocity.x * sign(position.x - player.position.x)
 
-	previousAttack = attack
+	previousAttack = attack 
 	handleAnimations()
 
 func handleSound():
 	if position.y < 0:
 		highFlag = true
-	print(position.y)
+	#print(position.y)
 	if is_on_floor():
 		if not justFloor:
 			# Player just landed

@@ -17,13 +17,13 @@ var previousDirection=-1
 var comboCount=0
 @onready var comboLabel=get_parent().get_node("CanvasLayer/Label")
 var attacks={"punch":"PunchHitbox", "kick":"KickHitbox"}
-
+var attackUI
 var animationState=["idle",0.5]
 var animationDict={
 	"punch":["punch", 0.1],
 	"kick":["kick", 0.2]
 }
-
+var keys = []
 @onready var enemy=get_parent().get_node("Enemy")
 @onready var hitboxes={"punch":$PunchHitbox, "kick":$KickHitbox, "hurtbox":$HurtBox}
 
@@ -49,7 +49,7 @@ func _ready():
 	hitboxOriginal=[]
 	previousDirection=-1
 
-
+	attackUI=get_parent().get_node("AttackUI")
 	var animationState=["idle",0.5]
 	gravity=2300
 	friction=70	
@@ -101,14 +101,11 @@ func applyGravity(delta):
 		velocity.y+=gravity*existsOrZero(delta)
 		
 func handleInput(delta):
-	var keys = []
+	keys = []
 	playerDirection = 0
 
 	if Input.is_action_pressed("ui_up"):
-		if is_on_floor():
-			velocity.y -= jumpSpeed
 		keys.append("up")
-
 	# speedUp handled with its own else so it doesn't get reset by other checks
 	if Input.is_action_pressed("speedUp"):
 		maxSpeed = 10000
@@ -148,7 +145,13 @@ func handleInput(delta):
 
 	if Input.is_action_just_pressed("space"):
 		slowed = not slowed
+	if Input.is_action_just_pressed("Jump"):
+		keys.append("Jump")
+		if is_on_floor():
+			velocity.y -= jumpSpeed
+			keys.append("up")
 
+	getDirection(keys)
 	handleAnimations(keys, delta)
 	handleHitboxFlip()
 
@@ -165,9 +168,11 @@ func handleAnimations(keys,delta):
 	if playerDirection==1:
 		$AnimatedSprite2D.play("walk")
 		$AnimatedSprite2D.flip_h = false
+		previousDirection=1
 	if playerDirection==-1:
 		$AnimatedSprite2D.play("walk")
-		$AnimatedSprite2D.flip_h = true 
+		$AnimatedSprite2D.flip_h = true
+		previousDirection=-1 
 	if playerDirection==0:
 		$AnimatedSprite2D.play("idle")	
 	if "F" in keys:
@@ -180,7 +185,7 @@ func handleAnimations(keys,delta):
 		print(animationDict["kick"])
 		animationState=animationDict["kick"].duplicate()
 		attack("kick",delta)
-			
+		
 func handleHitboxFlip():
 	if playerDirection==1:
 		var c=0
@@ -193,10 +198,10 @@ func handleHitboxFlip():
 			x.position.x=hitboxOriginal[c]*-1
 			c+=1
 	#print(playerDirection)	
-func attack(type,delta):
+func attack(type,delta, direction=getDirection(keys)):
 	if cooldown>0:
 		return
-	enemy.attacked(attacks[type])
+	enemy.attacked(attacks[type],direction)
 
 
 func handleTime(delta):
@@ -211,3 +216,16 @@ func existsOrZero(x):
 	if x== null:
 		return 0
 	return x
+	
+func getDirection(keys):
+	var out=[0,0]
+	if "left" in keys:
+		out[0]-=1
+	if "right" in keys:
+		out[0]+=1
+	if "up" in keys:
+		out[1]+=1
+	if "down" in keys:
+		out[1]-=1
+	attackUI.get_node("Back/Sprite2D").rotation=(atan2(out[0],out[1]))
+	return out
