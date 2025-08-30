@@ -113,3 +113,5 @@ particle_flag_align_y = true
 spread = 52.8
 initial_velocity_max = 489.68
 linear_accel_max = 42.27
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

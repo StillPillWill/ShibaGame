@@ -19,17 +19,18 @@ func _ready() -> void:
 	AudioManager.play_music(preload("res://music/music.mp3"),true, 0.5)
 
 	player = get_parent().get_node_or_null("Zoomer")
-	enemy  = get_parent().get_node_or_null("Enemy")
+	enemy  = get_parent().get_node_or_null("Clanker1")
 	if player: player_height = get_shape_height(player)
 	if enemy:  enemy_height  = get_shape_height(enemy)
 	if debug_prints:
 		print("ready:", "player:", player, "enemy:", enemy, "floor:", floor)
 
 func _process(delta: float) -> void:
+
 	if not player or not enemy or not floor:
 		if debug_prints: print("missing nodes:", player, enemy, floor)
 		return
-
+		
 	var vp = get_viewport().get_visible_rect().size
 	if vp.x <= 0 or vp.y <= 0:
 		pass#ints: print("bad viewport:", vp); return

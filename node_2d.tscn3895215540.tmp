@@ -28,10 +28,9 @@ position = Vector2(415, 275)
 
 [node name="Floor" parent="." instance=ExtResource("3_0hol4")]
 position = Vector2(612, 690)
-scale = Vector2(32.7598, 1.85168)
+scale = Vector2(32.6002, 1.8507)
 
 [node name="Enemy" parent="." instance=ExtResource("5_q6r6c")]
-visible = false
 position = Vector2(659, 271)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -46,8 +45,6 @@ text = "Hello"
 label_settings = SubResource("LabelSettings_q6r6c")
 
 [node name="AttackUI" parent="." instance=ExtResource("5_kdubu")]
-visible = false
 
 [node name="Clanker1" parent="." instance=ExtResource("6_kdubu")]
-position = Vector2(170, 434)
-scale = Vector2(2, 2)
+position = Vector2(552, 491)

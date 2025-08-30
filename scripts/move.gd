@@ -15,6 +15,8 @@ var slowFactor=0.25
 var hitboxOriginal={}
 var previousDirection=-1
 var comboCount=0
+var hp=3
+var isDead=false
 @onready var comboLabel=get_parent().get_node("CanvasLayer/Label")
 var attacks={"punch":"PunchHitbox", "kick":"KickHitbox"}
 var attackUI
@@ -24,7 +26,7 @@ var animationDict={
 	"kick":["kick", 0.2]
 }
 var keys = []
-@onready var enemy=get_parent().get_node("Enemy")
+@onready var enemy=get_parent().get_node("Clanker1")
 @onready var hitboxes={"punch":$PunchHitbox, "kick":$KickHitbox, "hurtbox":$HurtBox}
 
 
@@ -60,6 +62,9 @@ func _ready():
 		hitboxOriginal.append(hitbox)
 	
 func _physics_process(delta: float) -> void:
+	
+	if isDead:
+		return
 	
 	if comboCount>0:
 		comboLabel.text="COMBO X "+str(comboCount)
@@ -229,3 +234,14 @@ func getDirection(keys):
 		out[1]-=1
 	attackUI.get_node("Back/Sprite2D").rotation=(atan2(out[0],out[1]))
 	return out
+	
+func slamHit():
+	
+	velocity.x=randf_range(-2000,2000)
+	velocity.y=-1000
+	print("f")
+	hp-=1
+	if hp==0:
+		dead()
+func dead():
+	isDead=true

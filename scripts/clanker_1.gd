@@ -9,11 +9,17 @@ var screen_width = get_viewport_rect().size.x
 var cooldown=false
 var previousAttack=null
 var highFlag=true
+var dac=0
 var animationState=["idle",0.5]
 var animationTimer={"PunchHitbox":0.5, "KickHitbox":1}
 var inRange={"KickHitbox":false, "PunchHitbox":false}
 var attackAnimation={"KickHitbox":"hitRight", "PunchHitbox": "hitRight", null:"idle"}
 var playerDir=[0,0]
+var attack=false
+var target=[0,0]
+var attackFlag=false
+var hp=5
+var isDead=false
 var attackKnockback={
 "KickHitbox":Vector2(-400,500),
 "PunchHitbox":Vector2(-200,-400),
@@ -26,30 +32,61 @@ var attackKnockback={
 var hitStun=0
 var justFloor
 var velocityBuffer=Vector2.ZERO
+# --- Added for smooth attack launch ---
+var attackLaunch=false
+var desiredVelocity=Vector2.ZERO
+var attackAccel=3000.0
+var maxAttackSpeed=900.0
+# --------------------------------------
+
 func _ready():
 	$Hitbox.area_entered.connect(_on_hitbox_area_entered)
 	$Hitbox.area_exited.connect(_on_hitbox_area_exited)
+	$AnimatedSprite2D.play("idle")
 
-	
+var hoverOn=false
+var attackInProgress=false
 
 func _physics_process(delta: float) -> void:
-			
-			
-	if is_on_floor():
-		player.comboCount=0
-	applyGravity(delta)
+	if isDead:
+		print(dead)
+		return
+	dac+=delta
+	if Input.is_action_just_pressed("M"):
+		attackPlayer()
+		#player.comboCount=0
+	if attackInProgress:
+		continueAttack()
 	#print("g"+str(velocity.x))
 	applyFriction(delta)
+	#applyGravity(delta)
 	#print("f"+str(velocity.x))
-	handleSound()
-	
-	#print("s"+str(velocity.x))
-	handleAnimations(delta)
-	#velocity.x=40
-	velocity+=velocityBuffer
-	velocityBuffer=Vector2.ZERO
-	
+	if not hoverOn:
+		applyGravity(delta)
+	if not attackFlag and not attackInProgress:
+		if dac>3:
+			attackPlayer()
+	# If we're currently in the smooth attack launch, move velocity toward desiredVelocity
+	if attackLaunch:
+		velocity = velocity.move_toward(desiredVelocity, attackAccel * delta)
+	else:
+		velocity += velocityBuffer
+		velocityBuffer = Vector2.ZERO
+	if dac>=3:
+		dac=0
+	handleAnimations()
 	move_and_slide()
+
+	# When we land after an attack, clear leftover momentum and flags
+	if is_on_floor() and attackFlag:
+		velocity = Vector2.ZERO
+		attackFlag = false
+		attackLaunch = false
+		velocityBuffer = Vector2.ZERO
+		print("stuff")
+
+	#handleAnimations(delta)
+	#velocity.x=40
 
 func stepTowards(num, target, step):
 	var out=num
@@ -60,60 +97,71 @@ func stepTowards(num, target, step):
 	return out
 
 func applyFriction(delta):
+	if is_on_floor():
+		rotation=0		
 	if is_on_floor() and friction > 0:
 		velocity.x = lerp(velocity.x, 0.0, friction * delta)
 	if abs(velocity.x) < 1 and friction > 0:  # Only zero out if friction is active
 		velocity.x = 0
+
 func applyGravity(delta):
 	if not is_on_floor():
 		velocity.y+=gravity*delta
 
-		
-func handleAnimations(delta=0,attack=null):
-	if animationState[1]<=0:
-		
-		$AnimatedSprite2D.play("idle")
-		if is_on_floor():
-			$AnimatedSprite2D.pause()
-		previousAttack=null
-	
-	if sign(position.x-player.position.x)==-1:
-		$AnimatedSprite2D.flip_h=true
-	if sign(position.x-player.position.x)==1:
-		$AnimatedSprite2D.flip_h=false	
-	animationState[1]-=delta
-	
-	$AnimatedSprite2D.play(attackAnimation[previousAttack])
-	if attack==null:
-		return
+func attackPlayer():
+	velocityBuffer[1]-=1000	
+	attackInProgress=true	
 
+func continueAttack():
 	
-	if attack=="PunchHitbox":
-		$AnimatedSprite2D.play("hitRight")
-	if attack=="KickHitbox":
-		$AnimatedSprite2D.play("hitRight")
+	if velocity.y > 0 and not hoverOn:
+		hoverOn = true
+		velocity.y = 0
+		target = [(player.position - position).angle() + PI / 2,player.position]
+		if target[0]>PI:
+			target[0]-=PI*2
+	if hoverOn:
+		rotation = stepTowards(rotation, target[0], 0.1)  # shortest path automatically
+		#print(rotation)
+		#print(target[0])
+		
+	if abs(rotation - target[0]) < 0.1 and hoverOn:
+		await get_tree().create_timer(0.1).timeout
+		var direction = (target[1] - position).normalized()
+		var distance = (target[1] - position).length()
+		var speed = distance * 2  # adjust multiplier for acceleration strength
+
+		# --- Instead of instantly adding a large velocity, set a desiredVelocity and enable smooth launch ---
+		speed = min(speed, maxAttackSpeed)
+		desiredVelocity = direction * speed
+		attackLaunch = true
+		# ------------------------------------------------------------------------------
+
+		hoverOn = false
+		attackInProgress = false
+		attackFlag = true
 	
+func handleAnimations(delta=0,attack=null):
+	var anim=$AnimatedSprite2D
+	anim.play("idle")
 
 func _on_hitbox_area_entered(body: Node2D) -> void:
 	if "KickHitbox" in str(body):
 		inRange["KickHitbox"]=true # Replace with function body.
 	if "PunchHitbox" in str(body):
 		inRange["PunchHitbox"]=true
+	
 	print("entered"+str(body))
 
 func _on_hitbox_area_exited(body: Node2D) -> void:
-	if "KickHitbox" in str(body):
-		inRange["KickHitbox"]=false # Replace with function body.
-	if "PunchHitbox" in str(body):
-		inRange["PunchHitbox"]=false
-	print("exited"+str(body))
 
+	print("exited"+str(body))
 
 func attacked(attack,direction):
 
 		if inRange[attack]:
 			hit(attack,direction)
-			
+
 func attackName(attack, direction):
 	var attackName=""
 	if attack=="PunchHitbox":
@@ -130,45 +178,24 @@ func attackName(attack, direction):
 		return attackName
 	else:
 		return attack
-	
+
 func hit(attack,direction):
 	print("hit")
 	playerDir=direction
-	player.comboCount+=1
-	if player.comboCount==4:
-		AudioManager.play_sfx(preload("res://sfx/shiba.mp3"))
+	#AudioManager.play_sfx(preload("res://sfx/shiba.mp3"))
 	animationState = [attack, animationTimer[attack]]
 	var attackName=attackName(attack,direction)
-	velocityBuffer.x += attackKnockback[attackName].x * -1*sign(position.x - player.position.x)
-	velocityBuffer.y += attackKnockback[attackName].y   # fixed
 	if attack == "PunchHitbox":
 		velocityBuffer.y += player.velocity.y
 		print("super")
 	AudioManager.play_sfx(preload("res://sfx/hit2.wav"))
+	hp-=1
 	print("hit")
-
-	if attack=="KickHitbox":
-		velocityBuffer.x += player.velocity.x * sign(position.x - player.position.x)
-
-	previousAttack = attack 
-	handleAnimations()
-
-func handleSound():
-	if position.y < 0:
-		highFlag = true
-	#print(position.y)
-	if is_on_floor():
-		if not justFloor:
-			# Player just landed
-			justFloor = true
-			if highFlag:
-				AudioManager.play_sfx(preload("res://sfx/thud.wav"))
-				highFlag = false
-			else:
-				AudioManager.play_sfx(preload("res://sfx/thud2.wav"))
-	else:
-		justFloor = false
-
-
+	if hp==0:
+		dead()
 func _on_hitbox_body_entered(body: Node2D) -> void:
-	pass
+	if "Zoomer" in str(body) and attackFlag:
+		player.slamHit()# Replace with function body.
+func dead():
+	isDead=true
+	print("dead")

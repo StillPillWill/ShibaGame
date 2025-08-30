@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://kuu7joeo0vgx"]
+
+[ext_resource type="Script" uid="uid://bkk8y0es20121" path="res://scripts/clanker_1.gd" id="1_pkvd0"]
+[ext_resource type="Texture2D" uid="uid://c0je3vqvmbp0m" path="res://images/Enemy/Clanker.png" id="1_xa3bt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pkvd0"]
+size = Vector2(22.25, 69.5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pkvd0"]
+atlas = ExtResource("1_xa3bt")
+region = Rect2(0, 0, 1440, 800)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ym0yc"]
+atlas = ExtResource("1_xa3bt")
+region = Rect2(1440, 0, 1440, 800)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6h2aj"]
+atlas = ExtResource("1_xa3bt")
+region = Rect2(2880, 0, 1440, 800)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lxcjy"]
+atlas = ExtResource("1_xa3bt")
+region = Rect2(4320, 0, 1440, 800)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_55txb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pkvd0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ym0yc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6h2aj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lxcjy")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Clanker1" type="CharacterBody2D"]
+script = ExtResource("1_pkvd0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0.25)
+shape = SubResource("RectangleShape2D_pkvd0")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, 0.25)
+shape = SubResource("RectangleShape2D_pkvd0")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(1, 1)
+scale = Vector2(0.12, 0.12)
+sprite_frames = SubResource("SpriteFrames_55txb")
+frame_progress = 0.448222
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
