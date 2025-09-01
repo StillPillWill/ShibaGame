@@ -21,7 +21,7 @@ AudioManager="*res://scripts/AudioManager.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
+enabled=PackedStringArray("res://addons/copilot/plugin.cfg", "res://addons/godot_super-wakatime/plugin.cfg")
 
 [input]
 

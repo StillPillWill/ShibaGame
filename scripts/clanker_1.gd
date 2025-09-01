@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+
 @export var friction=5
 @export var gravity = 1500
 @export var jumpSpeed = 600
@@ -18,7 +19,7 @@ var playerDir=[0,0]
 var attack=false
 var target=[0,0]
 var attackFlag=false
-var hp=5
+var hp=2
 var isDead=false
 var attackKnockback={
 "KickHitbox":Vector2(-400,500),
@@ -198,4 +199,11 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 		player.slamHit()# Replace with function body.
 func dead():
 	isDead=true
+	$AnimatedSprite2D.play("explode")
+	$AnimatedSprite2D/CPUParticles2D.emitting = true
+	await get_tree().create_timer(0.5).timeout
+	hide()
+	set_deferred("collision_layer", 0)
+	set_deferred("collision_mask", 0)
+
 	print("dead")

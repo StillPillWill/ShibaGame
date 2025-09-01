@@ -16,11 +16,14 @@ var hitboxOriginal={}
 var previousDirection=-1
 var comboCount=0
 var hp=3
+var justFinished=null
 var isDead=false
 @onready var comboLabel=get_parent().get_node("CanvasLayer/Label")
 var attacks={"punch":"PunchHitbox", "kick":"KickHitbox"}
 var attackUI
 var animationState=["idle",0.5]
+var pastDir2=0
+
 var animationDict={
 	"punch":["punch", 0.1],
 	"kick":["kick", 0.2]
@@ -36,7 +39,7 @@ var keys = []
 
 
 func _ready():
-	friction=50	
+	friction=50
 	gravity = 2000
 	jumpSpeed = 900
 	fastFallSpeed=50
@@ -155,7 +158,7 @@ func handleInput(delta):
 		if is_on_floor():
 			velocity.y -= jumpSpeed
 			keys.append("up")
-
+	pastDir2=playerDirection
 	getDirection(keys)
 	handleAnimations(keys, delta)
 	handleHitboxFlip()
@@ -170,16 +173,50 @@ func handleAnimations(keys,delta):
 			$AnimatedSprite2D.animation=animationState[0]
 		animationState[1]-=delta
 		return
-	if playerDirection==1:
-		$AnimatedSprite2D.play("walk")
-		$AnimatedSprite2D.flip_h = false
-		previousDirection=1
-	if playerDirection==-1:
-		$AnimatedSprite2D.play("walk")
-		$AnimatedSprite2D.flip_h = true
-		previousDirection=-1 
-	if playerDirection==0:
-		$AnimatedSprite2D.play("idle")	
+	if abs(playerDirection) == 1:
+		# direction changed -> start walk_start once and update trackers
+		if playerDirection != pastDir2:
+			$AnimatedSprite2D.flip_h = playerDirection == -1
+			previousDirection = playerDirection
+			pastDir2 = playerDirection
+			$AnimatedSprite2D.play("walk_start")
+			if playerDirection==1:
+				$AnimatedSprite2D/AnimationPlayer.play("anim")
+			elif playerDirection==-1:
+				$AnimatedSprite2D/AnimationPlayer.play("anim_back")
+				print("cs")
+			justFinished = false
+		# walk_start finished -> switch to walk (ensure previousDirection stays correct)
+		elif $AnimatedSprite2D.animation == "walk_start" and justFinished:
+			$AnimatedSprite2D.play("walk")
+			justFinished = false
+			previousDirection = playerDirection
+		# already in walk -> if direction flips while walking, update flip and trackers without restarting
+		elif $AnimatedSprite2D.animation == "walk":
+			if playerDirection != previousDirection:
+				$AnimatedSprite2D.flip_h = playerDirection == -1
+				previousDirection = playerDirection
+				pastDir2 = playerDirection
+		# fallback -> start walk_start and set trackers
+		else:
+			$AnimatedSprite2D.flip_h = playerDirection == -1
+			previousDirection = playerDirection
+			pastDir2 = playerDirection
+			$AnimatedSprite2D.play("walk_start")
+			if playerDirection==1:
+				$AnimatedSprite2D/AnimationPlayer.play("anim")
+			elif playerDirection==-1:
+				$AnimatedSprite2D/AnimationPlayer.play("anim_back")
+				print("cs")
+			justFinished = false
+
+	elif playerDirection == 0:
+		$AnimatedSprite2D.play("idle")
+		$AnimatedSprite2D/AnimationPlayer.play("RESET")
+		previousDirection = 0
+		pastDir2 = 0
+
+
 	if "F" in keys:
 		print("punch "+str(delta)+" "+str(animationState))
 		print(animationDict["punch"])
@@ -245,3 +282,7 @@ func slamHit():
 		dead()
 func dead():
 	isDead=true
+
+
+func _on_animated_sprite_2d_animation_finished() -> void:
+	justFinished=true # Replace with function body.

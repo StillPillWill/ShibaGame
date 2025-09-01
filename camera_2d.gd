@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 	if not player or not enemy or not floor:
 		if debug_prints: print("missing nodes:", player, enemy, floor)
 		return
-		
+		#hel
 	var vp = get_viewport().get_visible_rect().size
 	if vp.x <= 0 or vp.y <= 0:
 		pass#ints: print("bad viewport:", vp); return

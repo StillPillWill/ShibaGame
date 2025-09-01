@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c0rv8jddtt55h"]
+[gd_scene load_steps=10 format=3 uid="uid://c0rv8jddtt55h"]
 
 [ext_resource type="PackedScene" uid="uid://cpsvpm2q4pucy" path="res://zoomer.tscn" id="1_wtcfe"]
 [ext_resource type="PackedScene" uid="uid://b8x75mfha5vkc" path="res://floor.tscn" id="3_0hol4"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bgghqccfrvjae" path="res://attack_ui.tscn" id="5_kdubu"]
 [ext_resource type="PackedScene" uid="uid://cdaqa8au8bn4s" path="res://enemy.tscn" id="5_q6r6c"]
 [ext_resource type="PackedScene" uid="uid://kuu7joeo0vgx" path="res://clanker_1.tscn" id="6_kdubu"]
+[ext_resource type="Texture2D" uid="uid://ktyyjejt8guw" path="res://images/Background/back2.png" id="7_d21ai"]
 
 [sub_resource type="SystemFont" id="SystemFont_0hol4"]
 font_italic = true
@@ -51,3 +52,17 @@ visible = false
 [node name="Clanker1" parent="." instance=ExtResource("6_kdubu")]
 position = Vector2(170, 434)
 scale = Vector2(2, 2)
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+follow_viewport_scale = 1.4
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.15, 0.15)
+motion_mirroring = Vector2(1159, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+texture_filter = 1
+position = Vector2(573, 383)
+scale = Vector2(1.81406, 1.70833)
+texture = ExtResource("7_d21ai")
