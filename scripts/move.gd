@@ -15,7 +15,7 @@ var slowFactor=0.25
 var hitboxOriginal={}
 var previousDirection=-1
 var comboCount=0
-var hp=3
+var hp=5
 var justFinished=null
 var isDead=false
 @onready var comboLabel=get_parent().get_node("CanvasLayer/Label")
@@ -286,3 +286,8 @@ func dead():
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	justFinished=true # Replace with function body.
+
+func hitByBullet(velocity):
+	velocity.y-=400
+	print("hitByBullet")
+	

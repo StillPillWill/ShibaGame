@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c0rv8jddtt55h"]
+[gd_scene load_steps=12 format=3 uid="uid://c0rv8jddtt55h"]
 
 [ext_resource type="PackedScene" uid="uid://cpsvpm2q4pucy" path="res://zoomer.tscn" id="1_wtcfe"]
 [ext_resource type="PackedScene" uid="uid://b8x75mfha5vkc" path="res://floor.tscn" id="3_0hol4"]
@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://cdaqa8au8bn4s" path="res://enemy.tscn" id="5_q6r6c"]
 [ext_resource type="PackedScene" uid="uid://kuu7joeo0vgx" path="res://clanker_1.tscn" id="6_kdubu"]
 [ext_resource type="Texture2D" uid="uid://ktyyjejt8guw" path="res://images/Background/back2.png" id="7_d21ai"]
+[ext_resource type="PackedScene" uid="uid://1n8rddvfkh3t" path="res://engine.tscn" id="8_rj586"]
+[ext_resource type="PackedScene" uid="uid://bx4jkuhnee4m4" path="res://bullet.tscn" id="9_4d7sh"]
 
 [sub_resource type="SystemFont" id="SystemFont_0hol4"]
 font_italic = true
@@ -54,6 +56,7 @@ position = Vector2(170, 434)
 scale = Vector2(2, 2)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+visible = false
 follow_viewport_scale = 1.4
 scroll_ignore_camera_zoom = true
 
@@ -66,3 +69,10 @@ texture_filter = 1
 position = Vector2(573, 383)
 scale = Vector2(1.81406, 1.70833)
 texture = ExtResource("7_d21ai")
+
+[node name="Engine" parent="." instance=ExtResource("8_rj586")]
+visible = false
+position = Vector2(195, 434)
+
+[node name="Bullet" parent="." instance=ExtResource("9_4d7sh")]
+position = Vector2(667, 557)

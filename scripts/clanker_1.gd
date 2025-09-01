@@ -19,7 +19,10 @@ var playerDir=[0,0]
 var attack=false
 var target=[0,0]
 var attackFlag=false
-var hp=2
+var shotsFired=false
+var hp=5
+var attackMode="upDown"
+var bullet=preload("res://bullet.tscn")
 var isDead=false
 var attackKnockback={
 "KickHitbox":Vector2(-400,500),
@@ -54,6 +57,13 @@ func _physics_process(delta: float) -> void:
 		return
 	dac+=delta
 	if Input.is_action_just_pressed("M"):
+	#if not attackInProgress and attackFlag:
+		var c=randi_range(0,1)
+		if c==0:
+			attackMode="Shoot"
+		if c==1:
+			attackMode="upDown"
+		print(c)
 		attackPlayer()
 		#player.comboCount=0
 	if attackInProgress:
@@ -109,42 +119,7 @@ func applyGravity(delta):
 	if not is_on_floor():
 		velocity.y+=gravity*delta
 
-func attackPlayer():
-	velocityBuffer[1]-=1000	
-	attackInProgress=true	
 
-func continueAttack():
-	
-	if velocity.y > 0 and not hoverOn:
-		hoverOn = true
-		velocity.y = 0
-		target = [(player.position - position).angle() + PI / 2,player.position]
-		if target[0]>PI:
-			target[0]-=PI*2
-	if hoverOn:
-		rotation = stepTowards(rotation, target[0], 0.1)  # shortest path automatically
-		#print(rotation)
-		#print(target[0])
-		
-	if abs(rotation - target[0]) < 0.1 and hoverOn:
-		await get_tree().create_timer(0.1).timeout
-		var direction = (target[1] - position).normalized()
-		var distance = (target[1] - position).length()
-		var speed = distance * 2  # adjust multiplier for acceleration strength
-
-		# --- Instead of instantly adding a large velocity, set a desiredVelocity and enable smooth launch ---
-		speed = min(speed, maxAttackSpeed)
-		desiredVelocity = direction * speed
-		attackLaunch = true
-		# ------------------------------------------------------------------------------
-
-		hoverOn = false
-		attackInProgress = false
-		attackFlag = true
-	
-func handleAnimations(delta=0,attack=null):
-	var anim=$AnimatedSprite2D
-	anim.play("idle")
 
 func _on_hitbox_area_entered(body: Node2D) -> void:
 	if "KickHitbox" in str(body):
@@ -156,8 +131,11 @@ func _on_hitbox_area_entered(body: Node2D) -> void:
 
 func _on_hitbox_area_exited(body: Node2D) -> void:
 
-	print("exited"+str(body))
-
+	if "KickHitbox" in str(body):
+		inRange["KickHitbox"]=false # Replace with function body.
+	if "PunchHitbox" in str(body):
+		inRange["PunchHitbox"]=false
+	
 func attacked(attack,direction):
 
 		if inRange[attack]:
@@ -194,9 +172,11 @@ func hit(attack,direction):
 	print("hit")
 	if hp==0:
 		dead()
+		
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if "Zoomer" in str(body) and attackFlag:
 		player.slamHit()# Replace with function body.
+		
 func dead():
 	isDead=true
 	$AnimatedSprite2D.play("explode")
@@ -207,3 +187,74 @@ func dead():
 	set_deferred("collision_mask", 0)
 
 	print("dead")
+
+func attackPlayer():
+	velocityBuffer[1]-=1000	
+	attackInProgress=true	
+	shotsFired=false
+func continueAttack():
+	if attackMode=="upDown":
+		if velocity.y > 0 and not hoverOn:
+			hoverOn = true
+			velocity.y = 0
+			target = [(player.position - position).angle() + PI / 2,player.position]
+			if target[0]>PI:
+				target[0]-=PI*2
+		if hoverOn:
+			rotation = stepTowards(rotation, target[0], 0.1)  # shortest path automatically
+		#print(rotation)
+		#print(target[0])
+		
+		if abs(rotation - target[0]) < 0.1 and hoverOn:
+			await get_tree().create_timer(0.1).timeout
+			var direction = (target[1] - position).normalized()
+			var distance = (target[1] - position).length()
+			var speed = distance * 2  # adjust multiplier for acceleration strength
+
+		# --- Instead of instantly adding a large velocity, set a desiredVelocity and enable smooth launch ---
+			speed = min(speed, maxAttackSpeed)
+			desiredVelocity = direction * speed
+			attackLaunch = true
+			# ------------------------------------------------------------------------------
+
+			hoverOn = false
+			attackInProgress = false
+			attackFlag = true
+			
+	if attackMode=="Shoot" and not shotsFired and (velocity.y > 0 and not hoverOn):
+		hoverOn = true
+		print("shoot")
+		
+		shotsFired=true
+		
+		$AnimatedSprite2D.play("powerup")
+		await get_tree().create_timer(2.15).timeout
+
+		shoot(100)
+		
+func shoot(times):
+	var initialRotation=rotation
+
+	for x in range(times):
+		if isDead:
+			return
+		$AnimatedSprite2D.play("shoot")
+		
+		await get_tree().create_timer(0.25).timeout
+		var c= bullet.instantiate()
+		c.position=position
+		c.velocity=Vector2(randf_range(-400,400), randf_range(-400,400))
+		get_parent().add_child(c)
+		AudioManager.play_sfx(preload("res://sfx/laserShoot.wav"))
+	hoverOn = false
+	attackInProgress = false
+	attackFlag = true
+
+		
+func handleAnimations(delta=0,attack=null):
+	var anim=$AnimatedSprite2D
+	
+	if attackInProgress and attackMode=="Shoot":
+		pass
+	else:
+		anim.play("idle")

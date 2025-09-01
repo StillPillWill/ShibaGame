@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://1n8rddvfkh3t"]
+
+[ext_resource type="Texture2D" uid="uid://c1mlajqy0x707" path="res://images/Enemy/engine.png" id="1_xrjxd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xrjxd"]
+atlas = ExtResource("1_xrjxd")
+region = Rect2(0, 200, 360, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2mc4n"]
+atlas = ExtResource("1_xrjxd")
+region = Rect2(0, 400, 360, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wb3ic"]
+atlas = ExtResource("1_xrjxd")
+region = Rect2(0, 600, 360, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6i7g3"]
+atlas = ExtResource("1_xrjxd")
+region = Rect2(0, 0, 360, 200)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5vh1k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xrjxd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2mc4n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wb3ic")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6i7g3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="Engine" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(3, 0)
+sprite_frames = SubResource("SpriteFrames_5vh1k")
+animation = &"idle"
