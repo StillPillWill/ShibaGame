@@ -143,13 +143,9 @@ region = Rect2(235, 334, 113, 121)
 atlas = ExtResource("2_ym0yc")
 region = Rect2(687, 334, 113, 121)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_lxcjy"]
-atlas = ExtResource("1_xa3bt")
-region = Rect2(1080, 0, 360, 200)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_ofp12"]
 atlas = ExtResource("1_xa3bt")
-region = Rect2(720, 0, 360, 200)
+region = Rect2(0, 0, 360, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lrdls"]
 atlas = ExtResource("1_xa3bt")
@@ -157,7 +153,11 @@ region = Rect2(360, 0, 360, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6wbew"]
 atlas = ExtResource("1_xa3bt")
-region = Rect2(0, 0, 360, 200)
+region = Rect2(720, 0, 360, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nrg1f"]
+atlas = ExtResource("1_xa3bt")
+region = Rect2(1080, 0, 360, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hivti"]
 atlas = ExtResource("4_6h2aj")
@@ -463,9 +463,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_lxcjy")
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_ofp12")
 }, {
 "duration": 1.0,
@@ -473,6 +470,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6wbew")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nrg1f")
 }],
 "loop": true,
 "name": &"idle",
@@ -670,7 +670,7 @@ texture_filter = 1
 position = Vector2(2, 0)
 scale = Vector2(0.48, 0.48)
 sprite_frames = SubResource("SpriteFrames_55txb")
-animation = &"shoot"
+animation = &"idle"
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="AnimatedSprite2D"]
 position = Vector2(-12, 0)

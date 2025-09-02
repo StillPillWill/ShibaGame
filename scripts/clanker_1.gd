@@ -90,10 +90,11 @@ func _physics_process(delta: float) -> void:
 	else:
 		applyGravity(delta)
 
-	if not attackFlag and not attackInProgress:
-		if dac>3:
+	if not attackFlag and not attackInProgress and not isShooting:
+		if dac > 3:
 			attackPlayer()
 			print("attacking")
+
 			
 	if attackLaunch:
 		velocity = velocity.move_toward(desiredVelocity, attackAccel * delta)
