@@ -3,18 +3,19 @@
 [ext_resource type="PackedScene" uid="uid://cpsvpm2q4pucy" path="res://zoomer.tscn" id="1_wtcfe"]
 [ext_resource type="PackedScene" uid="uid://b8x75mfha5vkc" path="res://floor.tscn" id="3_0hol4"]
 [ext_resource type="Script" uid="uid://bvpp7rvpakf67" path="res://camera_2d.gd" id="4_0hol4"]
+[ext_resource type="Script" uid="uid://c0ijbu1h4f1uw" path="res://scripts/hpBar.gd" id="5_4d7sh"]
 [ext_resource type="PackedScene" uid="uid://bgghqccfrvjae" path="res://attack_ui.tscn" id="5_kdubu"]
 [ext_resource type="PackedScene" uid="uid://cdaqa8au8bn4s" path="res://enemy.tscn" id="5_q6r6c"]
 [ext_resource type="PackedScene" uid="uid://kuu7joeo0vgx" path="res://clanker_1.tscn" id="6_kdubu"]
 [ext_resource type="Texture2D" uid="uid://ktyyjejt8guw" path="res://images/Background/back2.png" id="7_d21ai"]
-[ext_resource type="PackedScene" uid="uid://1n8rddvfkh3t" path="res://engine.tscn" id="8_rj586"]
-[ext_resource type="PackedScene" uid="uid://bx4jkuhnee4m4" path="res://bullet.tscn" id="9_4d7sh"]
+[ext_resource type="Script" uid="uid://bfnsjucut5077" path="res://scripts/parallax_layer.gd" id="7_rj586"]
 
-[sub_resource type="SystemFont" id="SystemFont_0hol4"]
-font_italic = true
+[sub_resource type="SystemFont" id="SystemFont_rj586"]
+oversampling = 10.0
 
-[sub_resource type="LabelSettings" id="LabelSettings_q6r6c"]
-font = SubResource("SystemFont_0hol4")
+[sub_resource type="LabelSettings" id="LabelSettings_4d7sh"]
+font = SubResource("SystemFont_rj586")
+font_size = 8
 
 [node name="Node2D" type="Node2D"]
 
@@ -38,15 +39,32 @@ visible = false
 position = Vector2(659, 271)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("5_4d7sh")
 
-[node name="Label" type="Label" parent="CanvasLayer"]
-offset_left = 9.0
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer"]
+offset_left = 419.0
 offset_top = 8.0
-offset_right = 56.0
-offset_bottom = 37.0
-scale = Vector2(2.33251, 2.39341)
-text = "Hello"
-label_settings = SubResource("LabelSettings_q6r6c")
+offset_right = 719.0
+offset_bottom = 17.0
+color = Color(0.18307, 0.191798, 0.291955, 1)
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/ColorRect2"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 299.0
+offset_bottom = 7.855
+color = Color(0.708226, 0, 0.225572, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/ColorRect2"]
+top_level = true
+layout_mode = 0
+offset_left = 555.0
+offset_top = 7.0
+offset_right = 615.0
+offset_bottom = 30.0
+text = "Clanker"
+label_settings = SubResource("LabelSettings_4d7sh")
 
 [node name="AttackUI" parent="." instance=ExtResource("5_kdubu")]
 visible = false
@@ -56,23 +74,16 @@ position = Vector2(170, 434)
 scale = Vector2(2, 2)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
-visible = false
 follow_viewport_scale = 1.4
 scroll_ignore_camera_zoom = true
+script = ExtResource("7_rj586")
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0.15, 0.15)
-motion_mirroring = Vector2(1159, 0)
+motion_mirroring = Vector2(1159, 869)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
 texture_filter = 1
 position = Vector2(573, 383)
 scale = Vector2(1.81406, 1.70833)
 texture = ExtResource("7_d21ai")
-
-[node name="Engine" parent="." instance=ExtResource("8_rj586")]
-visible = false
-position = Vector2(195, 434)
-
-[node name="Bullet" parent="." instance=ExtResource("9_4d7sh")]
-position = Vector2(667, 557)

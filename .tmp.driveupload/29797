@@ -1,0 +1,227 @@
+[res://node.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 0,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 1,
+"scroll_position": 0.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://animate.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 0,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 4,
+"scroll_position": 0.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://camera_2d.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 3,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 33,
+"scroll_position": 33.0,
+"selection": true,
+"selection_from_column": 2,
+"selection_from_line": 33,
+"selection_to_column": 3,
+"selection_to_line": 33,
+"syntax_highlighter": "GDScript"
+}
+
+[res://enemy.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 19,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 169,
+"scroll_position": 153.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://move_backup.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 0,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 0,
+"scroll_position": 0.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://stickman.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 0,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 0,
+"scroll_position": 0.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://scripts/level_1.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 0,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 5,
+"scroll_position": 0.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://scripts/move.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 8,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 17,
+"scroll_position": 9.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://scripts/AudioManager.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 9,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 25,
+"scroll_position": 39.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://scripts/clanker_1.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 24,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 216,
+"scroll_position": 9.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://addons/godot_super-wakatime/heartbeat.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 0,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 0,
+"scroll_position": 0.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://scripts/bullet.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 3,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 14,
+"scroll_position": 6.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://engine.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 0,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 0,
+"scroll_position": 0.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://scripts/engine.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 51,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 9,
+"scroll_position": 0.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://scripts/parallax_layer.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 0,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 13,
+"scroll_position": 3.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}
+
+[res://scripts/hpBar.gd]
+
+state={
+"bookmarks": PackedInt32Array(),
+"breakpoints": PackedInt32Array(),
+"column": 68,
+"folded_lines": Array[int]([]),
+"h_scroll_position": 0,
+"row": 11,
+"scroll_position": 0.0,
+"selection": false,
+"syntax_highlighter": "GDScript"
+}

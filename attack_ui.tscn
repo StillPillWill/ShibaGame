@@ -1,15 +1,20 @@
 [gd_scene load_steps=2 format=3 uid="uid://bgghqccfrvjae"]
 
-[ext_resource type="Texture2D" uid="uid://f78cv3d726qn" path="res://images/gui/arrow.png" id="1_e6eop"]
+[sub_resource type="LabelSettings" id="LabelSettings_gcdnq"]
+font_size = 241
+font_color = Color(0.743768, 0.119914, 0, 1)
 
 [node name="AttackUI" type="CanvasLayer"]
 
 [node name="Back" type="Panel" parent="."]
-offset_top = 602.0
+offset_top = -5.0
 offset_right = 1152.0
 offset_bottom = 649.0
 
-[node name="Sprite2D" type="Sprite2D" parent="Back"]
-position = Vector2(29, 23)
-scale = Vector2(0.085, 0.085)
-texture = ExtResource("1_e6eop")
+[node name="Label" type="Label" parent="."]
+offset_left = 4.0
+offset_top = 57.0
+offset_right = 1150.0
+offset_bottom = 591.0
+text = "you lose"
+label_settings = SubResource("LabelSettings_gcdnq")

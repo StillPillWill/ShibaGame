@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 AudioManager="*res://scripts/AudioManager.gd"
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/copilot/plugin.cfg", "res://addons/godot_super-wakatime/plugin.cfg")

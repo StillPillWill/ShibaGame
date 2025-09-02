@@ -68,12 +68,10 @@ func _physics_process(delta: float) -> void:
 	
 	if isDead:
 		return
-	
-	if comboCount>0:
-		comboLabel.text="COMBO X "+str(comboCount)
-	else:
-		comboLabel.text=""
-	
+	if hp<=0:
+		dead()
+
+
 	maxSpeed=min(500, position.distance_to(enemy.position))
 	speed=min(2000,position.distance_to(enemy.position)*4)
 	
@@ -249,7 +247,7 @@ func attack(type,delta, direction=getDirection(keys)):
 func handleTime(delta):
 
 	if slowed:
-		Engine.time_scale = slowFactor
+		Engine.time_scale = 0.1
 		speed=3000
 	else:
 		Engine.time_scale = 1
@@ -269,7 +267,6 @@ func getDirection(keys):
 		out[1]+=1
 	if "down" in keys:
 		out[1]-=1
-	attackUI.get_node("Back/Sprite2D").rotation=(atan2(out[0],out[1]))
 	return out
 	
 func slamHit():
@@ -281,6 +278,8 @@ func slamHit():
 	if hp==0:
 		dead()
 func dead():
+	get_parent().get_node("AttackUI").show()
+	get_parent().get_node("AttackUI/Label").text="You Lose"
 	isDead=true
 
 
@@ -289,5 +288,6 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 
 func hitByBullet(velocity):
 	velocity.y-=400
+	hp-=1
 	print("hitByBullet")
-	
+	print("hp"+str(hp))

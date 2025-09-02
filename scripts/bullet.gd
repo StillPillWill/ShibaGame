@@ -12,7 +12,7 @@ func _physics_process(delta: float) -> void:
 func _on_hit_area_body_entered(body: Node2D) -> void:
 	print(body) # Replace with function body.
 	if "Zoomer" in str(body):
-		player.hp-=1
+		#player.hp-=1
 		player.hitByBullet(velocity)
 		AudioManager.play_sfx(preload("res://sfx/hitLaser.wav"))
 	$CPUParticles2D.emitting=true
