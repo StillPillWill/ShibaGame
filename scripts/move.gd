@@ -63,7 +63,9 @@ func _ready():
 	for value in hitboxes.values():
 		var hitbox = value.position.x
 		hitboxOriginal.append(hitbox)
-	
+	velocity.y-=1500
+	await get_tree().create_timer(0.5).timeout
+	collision_mask=1
 func _physics_process(delta: float) -> void:
 	
 	if isDead:

@@ -16,7 +16,7 @@ var enemy_height: float = 64.0
 
 func _ready() -> void:
 	#current = true
-	AudioManager.play_music(preload("res://music/music.mp3"),true, 0.5)
+	#AudioManager.play_music(preload("res://music/music.mp3"),true, 0.5)
 
 	player = get_parent().get_node_or_null("Zoomer")
 	enemy  = get_parent().get_node_or_null("Clanker1")

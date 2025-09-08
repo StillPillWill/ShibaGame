@@ -27,4 +27,3 @@ func _set_multiline(allowed):
 #Sends user prompt
 func _send_user_prompt(user_prompt, user_suffix):
 	pass
-

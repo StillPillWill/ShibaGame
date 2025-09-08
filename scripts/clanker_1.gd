@@ -20,7 +20,7 @@ var attack=false
 var target=[0,0]
 var attackFlag=false
 var shotsFired=false
-var hp=50
+var hp=30
 const ROTATE_BEFORE_SHOOT = 0.45
 
 var attackMode=""
@@ -44,7 +44,7 @@ var upDownInFlight = false
 var attackLaunch=false
 var desiredVelocity=Vector2.ZERO
 var attackAccel=3000.0
-var maxAttackSpeed=900.0
+var maxAttackSpeed=3000.0
 # --------------------------------------
 
 # +++ ADDED +++ New state variables for the Shoot attack's powerup phase
@@ -110,6 +110,7 @@ func _physics_process(delta: float) -> void:
 			# landed after upDown attack — clear rotation and flight flag
 			rotation = 0
 			AudioManager.play_sfx(preload("res://sfx/thud.wav"))
+			
 			upDownInFlight = false
 
 		if attackFlag:
@@ -132,13 +133,15 @@ func stepTowards(num, target, step):
 	return out
 
 func applyFriction(delta):
-	if is_on_floor() and not attackInProgress: # --- CHANGED --- Don't reset body rotation if mid-attack
-		rotation=0
+
 	if is_on_floor() and friction > 0:
 		velocity.x = lerp(velocity.x, 0.0, friction * delta)
 	if abs(velocity.x) < 1 and friction > 0:
 		velocity.x = 0
-
+	if is_on_floor() and not attackInProgress: # --- CHANGED --- Don't reset body rotation if mid-attack
+		
+		
+		rotation=0
 func applyGravity(delta):
 	if not is_on_floor():
 		velocity.y+=gravity*delta
@@ -209,15 +212,14 @@ func dead():
 	print("dead")
 	get_parent().get_node("AttackUI").show()
 	get_parent().get_node("AttackUI/Label").text="You Win"
-# --- ... until here. Significant changes below. ---
-
+	get_parent().get_node("AttackUI/Label2").show()
 func attackPlayer():
 	dac = 0
 	# single-frame upward impulse to start jump
 	velocityBuffer.y -= jumpSpeed
 	attackInProgress = true
 	shotsFired = false
-	var c = randi_range(0, 2)
+	var c = randi_range(0, 4)
 	if c == 0:
 		attackMode = "Shoot"
 	else:
@@ -225,33 +227,44 @@ func attackPlayer():
 
 # continueAttack handles the frame-by-frame state after the initial jump
 func continueAttack():
-	# UPDOWN: detect apex, hover, rotate toward stored target, then launch
+	# constants (tweak these)
+	var TIME_TO_REACH = 0.35        # desired time (s) to reach target (controls aggression)
+	var HOMING_TURN_RATE = 6.0      # how fast it homes mid-flight (higher = sharper correction)
+	var ALIGN_THRESHOLD = 0.08      # radians tolerance for "aligned" before launching
+
+	var dt = get_physics_process_delta_time()
+
+	# -----------------------
+	# UPDOWN mode: apex -> hover -> rotate -> launch
+	# -----------------------
 	if attackMode == "upDown":
-		# detect apex (started falling)
+		# Detect apex: started falling (y > 0) and not already hovering
 		if velocity.y > 0 and not hoverOn:
 			hoverOn = true
+			# freeze vertical movement while hovering
 			velocity.y = 0
-			var target_angle = (player.position - position).angle() + PI / 2
-			# wrap to [-PI, PI]
-			if target_angle > PI:
-				target_angle -= PI * 2
-			elif target_angle < -PI:
-				target_angle += PI * 2
+			velocity = Vector2.ZERO
+			# compute aim angle (keep same formula you used)
+			var target_angle = (player.position - position).angle() + PI * 0.5
+			target_angle = angwrap(target_angle)
 			# store as [angle, position]
 			target = [target_angle, player.position]
 
+		# While hovering, rotate towards stored target angle (or dynamic player angle if you prefer)
 		if hoverOn:
-			var targ_angle = (player.position - position).angle() + PI / 2
+			var targ_angle = (player.position - position).angle() + PI * 0.5
 			if target is Array and target.size() > 0:
 				targ_angle = float(target[0])
 
-			rotation = lerp_angle(rotation, targ_angle, 6.0 * get_physics_process_delta_time())
+			# smooth rotate toward target
+			rotation = lerp_angle(rotation, targ_angle, 8.0 * dt)
 
-			# when nearly aligned, wait a beat then launch (keep body rotated during flight)
-			if abs(angwrap(rotation - targ_angle)) < 0.08:
-				await get_tree().create_timer(0.08).timeout
+			# when nearly aligned, pause a beat and launch
+			if abs(angwrap(rotation - targ_angle)) < ALIGN_THRESHOLD:
+				# short delay to make the telegraph noticeable
+				await get_tree().create_timer(0.06).timeout
 
-				# resolve target position into a Vector2
+				# resolve target position to use for flight (prefer stored pos if present)
 				var target_pos = player.position
 				if target is Array and target.size() > 1 and target[1] is Vector2:
 					target_pos = target[1]
@@ -260,19 +273,78 @@ func continueAttack():
 
 				var dir_vec = target_pos - position
 				if dir_vec == Vector2.ZERO:
-					dir_vec = Vector2(0, -1)
+					dir_vec = Vector2.UP
+
 				var direction = dir_vec.normalized()
 				var distance = dir_vec.length()
-				var speed = distance * 5.0
-				if speed > maxAttackSpeed:
-					speed = maxAttackSpeed
+
+				# compute speed so the enemy reaches the target in TIME_TO_REACH seconds
+				var speed = distance / TIME_TO_REACH
+				# respect maxAttackSpeed if you have one (assumes maxAttackSpeed exists)
+				if maxAttackSpeed > 0:
+					speed = max(min(speed, maxAttackSpeed),1000)
+
+				# immediate desired velocity for your movement system to consume
 				desiredVelocity = direction * speed
 
+				# give the enemy an initial instant push so it doesn't feel weak
+				# (only if your movement system accepts directly setting velocity)
+				if typeof(velocity) == TYPE_VECTOR2:
+					velocity = desiredVelocity
+
+				# set flags
 				attackLaunch = true
 				hoverOn = false
 				attackInProgress = false
 				attackFlag = true
 				upDownInFlight = true
+
+		# If already in-flight, optionally apply mild homing so it corrects undershoot
+		if upDownInFlight:
+			# home towards the player's current or stored position
+			var current_target = player.position
+			if target is Array and target.size() > 1 and target[1] is Vector2:
+				current_target = target[1]
+			var to_target = current_target - position
+			if to_target != Vector2.ZERO:
+				var desired_dir = to_target.normalized()
+				# keep current speed magnitude, but nudge direction towards desired_dir
+				var speed_mag = max(velocity.length(), 1.0) # avoid zero-length
+				var desired_vel = desired_dir * speed_mag
+				velocity = velocity.lerp(desired_vel, clamp(HOMING_TURN_RATE * dt, 0.0, 1.0))
+
+		return
+
+	# -----------------------
+	# SHOOT mode: apex -> hover -> powerup (single block)
+	# -----------------------
+	if attackMode == "Shoot":
+		# detect apex -> enter hovering/powerup once
+		if velocity.y > 0 and not hoverOn:
+			hoverOn = true
+			# stop movement while powering up
+			velocity.y = 0
+			velocity = Vector2.ZERO
+			isPoweringUp = true
+			powerupTimer = POWERUP_DURATION
+			$AnimatedSprite2D.play("powerup")
+			shotsFired = true
+		return
+
+	# -----------------------
+	# SHOOT mode: apex -> hover -> powerup (single block)
+	# -----------------------
+	if attackMode == "Shoot":
+		# detect apex -> enter hovering/powerup once
+		if velocity.y > 0 and not hoverOn:
+			hoverOn = true
+			# stop movement while powering up
+			velocity.y = 0
+			velocity = Vector2.ZERO
+			isPoweringUp = true
+			powerupTimer = POWERUP_DURATION
+			$AnimatedSprite2D.play("powerup")
+			shotsFired = true
 		return
 
 	# SHOOT: wait until apex then hover, play powerup (handled by handlePowerup)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=99 format=3 uid="uid://kuu7joeo0vgx"]
+[gd_scene load_steps=101 format=3 uid="uid://kuu7joeo0vgx"]
 
 [ext_resource type="Script" uid="uid://bkk8y0es20121" path="res://scripts/clanker_1.gd" id="1_pkvd0"]
 [ext_resource type="Texture2D" uid="uid://c0je3vqvmbp0m" path="res://images/Enemy/Clanker.png" id="1_xa3bt"]
@@ -647,6 +647,14 @@ height = 2
 color_ramp = SubResource("Gradient_ym0yc")
 noise = SubResource("FastNoiseLite_6h2aj")
 
+[sub_resource type="Gradient" id="Gradient_55txb"]
+offsets = PackedFloat32Array(0, 0.518072, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.880284, 0.36827, 0.161963, 1, 0.802552, 0.0169532, 9.62615e-08, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_i8k5q"]
+gradient = SubResource("Gradient_55txb")
+width = 2
+
 [node name="Clanker1" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 2
@@ -685,6 +693,27 @@ direction = Vector2(0, 0)
 spread = 180.0
 initial_velocity_min = 4000.0
 initial_velocity_max = 5000.0
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="AnimatedSprite2D"]
+visible = false
+position = Vector2(-2.08333, -72.9167)
+rotation = 1.54859
+emitting = false
+amount = 73
+texture = SubResource("GradientTexture1D_i8k5q")
+lifetime = 0.15
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 295901292
+lifetime_randomness = 1.0
+emission_shape = 3
+emission_rect_extents = Vector2(1.02, 7)
+spread = 128.27
+gravity = Vector2(0, 344.86)
+initial_velocity_max = 298.97
+angle_min = -123.6
+angle_max = 722.5
 
 [node name="Engine" parent="." instance=ExtResource("6_55txb")]
 position = Vector2(1, 1)

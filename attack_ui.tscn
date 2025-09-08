@@ -18,3 +18,11 @@ offset_right = 1150.0
 offset_bottom = 591.0
 text = "you lose"
 label_settings = SubResource("LabelSettings_gcdnq")
+
+[node name="Label2" type="Label" parent="."]
+visible = false
+offset_left = 332.0
+offset_top = 444.0
+offset_right = 653.0
+offset_bottom = 467.0
+text = "Playtesters let me know if you got this far"

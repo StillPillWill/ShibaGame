@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c0rv8jddtt55h"]
+[gd_scene load_steps=14 format=3 uid="uid://c0rv8jddtt55h"]
 
 [ext_resource type="PackedScene" uid="uid://cpsvpm2q4pucy" path="res://zoomer.tscn" id="1_wtcfe"]
 [ext_resource type="PackedScene" uid="uid://b8x75mfha5vkc" path="res://floor.tscn" id="3_0hol4"]
@@ -17,6 +17,14 @@ oversampling = 10.0
 font = SubResource("SystemFont_rj586")
 font_size = 8
 
+[sub_resource type="Gradient" id="Gradient_55txb"]
+offsets = PackedFloat32Array(0, 0.518072, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.880284, 0.36827, 0.161963, 1, 0.802552, 0.0169532, 9.62615e-08, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4d7sh"]
+gradient = SubResource("Gradient_55txb")
+width = 2
+
 [node name="Node2D" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("floor")]
@@ -28,7 +36,8 @@ smooth_speed = 55.215
 debug_prints = true
 
 [node name="Zoomer" parent="." instance=ExtResource("1_wtcfe")]
-position = Vector2(415, 275)
+position = Vector2(411, 704)
+collision_mask = 256
 
 [node name="Floor" parent="." instance=ExtResource("3_0hol4")]
 position = Vector2(612, 690)
@@ -87,3 +96,21 @@ texture_filter = 1
 position = Vector2(573, 383)
 scale = Vector2(1.81406, 1.70833)
 texture = ExtResource("7_d21ai")
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="."]
+position = Vector2(300, 440)
+rotation = 1.54859
+emitting = false
+amount = 73
+texture = SubResource("GradientTexture1D_4d7sh")
+lifetime = 0.16
+one_shot = true
+use_fixed_seed = true
+seed = 295901292
+emission_shape = 3
+emission_rect_extents = Vector2(1.02, 7)
+spread = 128.27
+gravity = Vector2(0, 344.86)
+initial_velocity_max = 298.97
+angle_min = -123.6
+angle_max = 722.5
