@@ -74,10 +74,10 @@ func _physics_process(delta: float) -> void:
 		dead()
 
 
-	maxSpeed=min(500, position.distance_to(enemy.position))
-	speed=min(2000,position.distance_to(enemy.position)*4)
+	maxSpeed=0#min(500, position.distance_to(enemy.position))
+	speed=0#min(2000,position.distance_to(enemy.position)*4)
 	
-	slowFactor=min(position.distance_to(enemy.position)/500,1)
+	slowFactor=0#min(position.distance_to(enemy.position)/500,1)
 	handleInput(delta)
 	applyGravity(delta)
 	handleTime(delta)

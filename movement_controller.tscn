@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://bigxdoo3jlxup"]
+
+[ext_resource type="Script" uid="uid://50dbeym5c0f2" path="res://movement_controller.gd" id="1_xnlhe"]
+[ext_resource type="PackedScene" uid="uid://1soblptoyj0l" path="res://raycon.tscn" id="2_5eexs"]
+
+[node name="MovementController" type="Node2D"]
+script = ExtResource("1_xnlhe")
+follower_scene = ExtResource("2_5eexs")
+spawn_interval = 0.2
+rotation_offset_degrees = 90.0
+move_endpoint_with_keys = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.1, 1.1)

@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwq6jbgk6orm8"]
+
+[ext_resource type="Script" uid="uid://cfddqj00n4haa" path="res://scripts/connecticut.gd" id="1_e0833"]
+
+[node name="PlayerScratch" type="CharacterBody2D"]
+script = ExtResource("1_e0833")
+node_a_path = NodePath("Node2D")
+node_b_path = NodePath("Node2D2")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-1, -72)
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(-127, -125)
+
+[node name="Node2D2" type="Node2D" parent="."]
+position = Vector2(164, 90)

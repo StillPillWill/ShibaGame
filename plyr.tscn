@@ -1,0 +1,302 @@
+[gd_scene load_steps=29 format=3 uid="uid://buyg3odwqvcv1"]
+
+[ext_resource type="Script" uid="uid://b5b3sssgfgdsp" path="res://scripts/move.gd" id="1_0bywy"]
+[ext_resource type="Texture2D" uid="uid://dqemj7o1ybehg" path="res://images/MC/clankmid.png" id="2_45t6b"]
+[ext_resource type="Texture2D" uid="uid://b5f3vj8krmaq" path="res://images/MC/clank_punch.png" id="4_a1mkv"]
+[ext_resource type="Texture2D" uid="uid://sgyoedxpnam5" path="res://images/MC/clank_walk_fix.png" id="5_5udkj"]
+[ext_resource type="Texture2D" uid="uid://bxdb87hv5i52q" path="res://images/MC/fist2.png" id="6_0bywy"]
+[ext_resource type="Texture2D" uid="uid://ckuuk5h8b2qpp" path="res://images/MC/clank_side.png" id="6_jp512"]
+[ext_resource type="PackedScene" uid="uid://bigxdoo3jlxup" path="res://movement_controller.tscn" id="7_45t6b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_swdng"]
+size = Vector2(21.5, 67)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ja4fd"]
+atlas = ExtResource("2_45t6b")
+region = Rect2(0, 0, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lmdn0"]
+atlas = ExtResource("4_a1mkv")
+region = Rect2(0, 100, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7crd8"]
+atlas = ExtResource("4_a1mkv")
+region = Rect2(0, 0, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_omtsn"]
+atlas = ExtResource("5_5udkj")
+region = Rect2(0, 0, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qeuc0"]
+atlas = ExtResource("5_5udkj")
+region = Rect2(0, 100, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3g40u"]
+atlas = ExtResource("5_5udkj")
+region = Rect2(0, 200, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qwyyw"]
+atlas = ExtResource("5_5udkj")
+region = Rect2(0, 300, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m0xs8"]
+atlas = ExtResource("6_jp512")
+region = Rect2(0, 0, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mu27e"]
+atlas = ExtResource("6_jp512")
+region = Rect2(0, 100, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pnbgv"]
+atlas = ExtResource("6_jp512")
+region = Rect2(0, 200, 180, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iwpi3"]
+atlas = ExtResource("6_jp512")
+region = Rect2(0, 300, 180, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_y47hn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ja4fd")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lmdn0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7crd8")
+}],
+"loop": false,
+"name": &"punch",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_omtsn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qeuc0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3g40u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qwyyw")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m0xs8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mu27e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pnbgv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iwpi3")
+}],
+"loop": false,
+"name": &"walk_start",
+"speed": 20.0
+}]
+
+[sub_resource type="Animation" id="Animation_4xgdb"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 2)]
+}
+
+[sub_resource type="Animation" id="Animation_tb7xr"]
+resource_name = "anim"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-2.36667, 0, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.322596]
+}
+
+[sub_resource type="Animation" id="Animation_rgena"]
+resource_name = "anim_back"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2997),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -0.267035]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rgena"]
+_data = {
+&"RESET": SubResource("Animation_4xgdb"),
+&"anim": SubResource("Animation_tb7xr"),
+&"anim_back": SubResource("Animation_rgena")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6tfq4"]
+size = Vector2(33.5, 41)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6c143"]
+size = Vector2(40, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_45t6b"]
+atlas = ExtResource("6_0bywy")
+region = Rect2(1, 0, 15, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ja4fd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_45t6b")
+}],
+"loop": true,
+"name": &"fist",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"gun",
+"speed": 5.0
+}]
+
+[node name="Zoomer" type="CharacterBody2D"]
+script = ExtResource("1_0bywy")
+metadata/_edit_horizontal_guides_ = [0.0]
+
+[node name="HurtBox" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("RectangleShape2D_swdng")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, 2)
+sprite_frames = SubResource("SpriteFrames_y47hn")
+animation = &"idle"
+metadata/_edit_group_ = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite2D"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_rgena")
+}
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, 2)
+sprite_frames = SubResource("SpriteFrames_y47hn")
+animation = &"idle"
+metadata/_edit_group_ = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite2D2"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_rgena")
+}
+
+[node name="PunchHitbox" type="Area2D" parent="."]
+visible = false
+position = Vector2(32, -4)
+scale = Vector2(1.625, 1.9)
+collision_layer = 2
+collision_mask = 3
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PunchHitbox"]
+shape = SubResource("RectangleShape2D_6tfq4")
+
+[node name="KickHitbox" type="Area2D" parent="."]
+visible = false
+position = Vector2(23, -3)
+scale = Vector2(1.69, 1.685)
+collision_layer = 2
+collision_mask = 3
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KickHitbox"]
+shape = SubResource("RectangleShape2D_6c143")
+
+[node name="Fist" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(9, 5)
+sprite_frames = SubResource("SpriteFrames_ja4fd")
+animation = &"fist"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3.195, 3.195)
+
+[node name="MovementController" parent="." instance=ExtResource("7_45t6b")]
+scale = Vector2(0.04, 0.04)
+start_node_path = NodePath("..")
+start_offset = Vector2(8.28, -18.19)
+end_node_path = NodePath("../Fist")
+end_offset = Vector2(0, -6.24)
+start_handle_rotation_offset = 90.0
+end_handle_rotation_offset = 90.0
+spawn_interval = 0.54
+duration = 1.905
+move_endpoint_with_keys = false
+
+[node name="MovementController2" parent="." instance=ExtResource("7_45t6b")]
+scale = Vector2(0.04, 0.04)
+start_node_path = NodePath("../MovementController")
+start_offset = Vector2(-11.515, -18.19)
+end_node_path = NodePath("../Fist2")
+end_offset = Vector2(0, -6.24)
+start_handle_rotation_offset = 90.0
+end_handle_rotation_offset = 90.0
+spawn_interval = 0.54
+duration = 1.905
+move_endpoint_with_keys = false
+
+[node name="Fist2" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-12, 5)
+sprite_frames = SubResource("SpriteFrames_ja4fd")
+animation = &"fist"
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="animation_finished" from="AnimatedSprite2D2" to="." method="_on_animated_sprite_2d_animation_finished"]

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://1soblptoyj0l"]
+
+[ext_resource type="Texture2D" uid="uid://b5scxrkvad7rd" path="res://images/MC/raycon.png" id="1_av56f"]
+
+[node name="raycon" type="Sprite2D"]
+texture_filter = 1
+rotation = 1.5707964
+scale = Vector2(30, 30)
+texture = ExtResource("1_av56f")
