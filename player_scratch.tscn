@@ -1,20 +1,232 @@
-[gd_scene load_steps=3 format=3 uid="uid://cwq6jbgk6orm8"]
+[gd_scene load_steps=17 format=3 uid="uid://cwq6jbgk6orm8"]
 
 [ext_resource type="Script" uid="uid://cfddqj00n4haa" path="res://scripts/connecticut.gd" id="1_e0833"]
+[ext_resource type="Script" uid="uid://bc35g37mj0fjh" path="res://scripts/movement.gd" id="1_egu30"]
 [ext_resource type="PackedScene" uid="uid://1soblptoyj0l" path="res://raycon.tscn" id="2_jc4xq"]
+[ext_resource type="Texture2D" uid="uid://cobbviohjhbju" path="res://images/MC/midsection.png" id="3_8qaqc"]
+[ext_resource type="Texture2D" uid="uid://bxdb87hv5i52q" path="res://images/MC/fist2.png" id="3_81xla"]
+[ext_resource type="PackedScene" uid="uid://1n8rddvfkh3t" path="res://engine.tscn" id="6_tu81x"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8qaqc"]
+atlas = ExtResource("3_81xla")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_egu30"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8qaqc")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_egu30"]
+atlas = ExtResource("3_8qaqc")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tu81x"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_egu30")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_tu81x"]
+resource_name = "Stretch"
+
+[sub_resource type="Animation" id="Animation_05gsd"]
+resource_name = "EngineTurnLeft"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Engine:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 22), Vector2(2.535, 22)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Engine:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -0.3141592653589793]
+}
+
+[sub_resource type="Animation" id="Animation_d5dtm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Engine:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 22)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Engine:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_xf0ge"]
+resource_name = "EngineTurnRight"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Engine:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 22), Vector2(-2.535, 22)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Engine:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.3141592653589793]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_05gsd"]
+_data = {
+&"EngineTurnLeft": SubResource("Animation_05gsd"),
+&"EngineTurnRight": SubResource("Animation_xf0ge"),
+&"RESET": SubResource("Animation_d5dtm"),
+&"Stretch": SubResource("Animation_tu81x")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tu81x"]
+size = Vector2(14, 42)
 
 [node name="PlayerScratch" type="CharacterBody2D"]
-script = ExtResource("1_e0833")
-follower_scene = ExtResource("2_jc4xq")
-follower_rotation_offset = 90.0
-node_a_path = NodePath("Node2D")
-node_b_path = NodePath("Node2D2")
+script = ExtResource("1_egu30")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(-1, -72)
+visible = false
+position = Vector2(2, -3)
+enabled = false
+zoom = Vector2(3.475, 3.475)
 
-[node name="Node2D" type="Node2D" parent="."]
-position = Vector2(-127, -125)
+[node name="RFist" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(17, 15)
+sprite_frames = SubResource("SpriteFrames_egu30")
+metadata/_edit_group_ = true
 
-[node name="Node2D2" type="Node2D" parent="."]
-position = Vector2(164, 90)
+[node name="Node2D2" type="Node2D" parent="RFist"]
+position = Vector2(0.5, -4)
+rotation = -1.5707964
+
+[node name="LFist" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-17, 15)
+sprite_frames = SubResource("SpriteFrames_egu30")
+metadata/_edit_group_ = true
+
+[node name="Node2D2" type="Node2D" parent="LFist"]
+position = Vector2(0.5, -4)
+rotation = -1.5707964
+
+[node name="Midsection" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_tu81x")
+
+[node name="Node2D" type="Node2D" parent="Midsection"]
+position = Vector2(11, -7)
+script = ExtResource("1_e0833")
+follower_scene = ExtResource("2_jc4xq")
+follower_scale = 1.0
+follower_rotation_offset = 90.0
+follower_speed_min = 59.0
+follower_speed_max = 59.0
+spawn_interval = 0.125
+node_a_path = NodePath(".")
+node_b_path = NodePath("../../RFist/Node2D2")
+handle_mode_a = 1
+handle_mode_b = 1
+handle_rotation_offset_b = 180.0
+line_width = 0.0
+
+[node name="Node2D2" type="Node2D" parent="Midsection"]
+position = Vector2(-11, -7)
+script = ExtResource("1_e0833")
+follower_scene = ExtResource("2_jc4xq")
+follower_scale = 1.0
+follower_rotation_offset = 90.0
+follower_speed_min = 59.0
+follower_speed_max = 59.0
+spawn_interval = 0.125
+node_a_path = NodePath(".")
+node_b_path = NodePath("../../LFist/Node2D2")
+handle_mode_a = 1
+handle_rotation_offset_a = 180.0
+handle_mode_b = 1
+handle_rotation_offset_b = 180.0
+line_width = 0.0
+
+[node name="Node2D3" type="Node2D" parent="Midsection"]
+position = Vector2(0, 13)
+rotation = -1.5707964
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_05gsd")
+}
+
+[node name="Engine" parent="." instance=ExtResource("6_tu81x")]
+position = Vector2(0, 22)
+scale = Vector2(0.5, 0.5)
+
+[node name="Node2D" type="Node2D" parent="Engine"]
+position = Vector2(0, -12)
+script = ExtResource("1_e0833")
+follower_scene = ExtResource("2_jc4xq")
+follower_scale = 2.0
+follower_rotation_offset = 90.0
+follower_speed_min = 59.0
+follower_speed_max = 59.0
+spawn_interval = 0.125
+node_a_path = NodePath(".")
+node_b_path = NodePath("../../Midsection/Node2D3")
+handle_mode_a = 1
+handle_rotation_offset_a = 90.0
+handle_mode_b = 1
+line_width = 0.0
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, 37)
+shape = SubResource("RectangleShape2D_tu81x")

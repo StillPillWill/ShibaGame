@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://b5scxrkvad7rd" path="res://images/MC/raycon.png" id="1_av56f"]
 
 [node name="raycon" type="Sprite2D"]
+z_index = -2
 texture_filter = 1
 rotation = 1.5707964
 scale = Vector2(30, 30)
