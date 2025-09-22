@@ -6,8 +6,13 @@
 [node name="Lev" type="Node2D"]
 
 [node name="PlayerScratch" parent="." instance=ExtResource("1_naclt")]
-position = Vector2(145, 104)
+position = Vector2(146, 104)
 scale = Vector2(2, 2)
 
 [node name="Floor" parent="." instance=ExtResource("2_3o2yo")]
-position = Vector2(582, 675)
+position = Vector2(585, 669)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+enabled = false
+zoom = Vector2(0.32, 0.32)

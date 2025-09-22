@@ -644,8 +644,8 @@ colors = PackedColorArray(0.206499, 0.143279, 0.00363033, 1, 0.964397, 0.385494,
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lxcjy"]
 width = 2
 height = 2
-color_ramp = SubResource("Gradient_ym0yc")
 noise = SubResource("FastNoiseLite_6h2aj")
+color_ramp = SubResource("Gradient_ym0yc")
 
 [sub_resource type="Gradient" id="Gradient_55txb"]
 offsets = PackedFloat32Array(0, 0.518072, 1)

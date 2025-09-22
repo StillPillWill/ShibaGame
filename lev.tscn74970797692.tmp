@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwggn0acd5vmt"]
+
+[ext_resource type="PackedScene" uid="uid://cwq6jbgk6orm8" path="res://player_scratch.tscn" id="1_naclt"]
+[ext_resource type="PackedScene" uid="uid://b8x75mfha5vkc" path="res://floor.tscn" id="2_3o2yo"]
+
+[node name="Lev" type="Node2D"]
+
+[node name="PlayerScratch" parent="." instance=ExtResource("1_naclt")]
+position = Vector2(146, 104)
+scale = Vector2(2, 2)
+
+[node name="Floor" parent="." instance=ExtResource("2_3o2yo")]
+position = Vector2(585, 669)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+enabled = false
+zoom = Vector2(0.32, 0.32)

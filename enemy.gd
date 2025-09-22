@@ -3,7 +3,7 @@ extends CharacterBody2D
 @export var friction=5
 @export var gravity = 1500
 @export var jumpSpeed = 600
-@onready var player=get_parent().get_node("Zoomer")
+@onready var player=get_parent().get_node("PlayerScratch")
 var recentAttack=""
 var screen_width = get_viewport_rect().size.x
 var cooldown=false
@@ -35,8 +35,7 @@ func _ready():
 func _physics_process(delta: float) -> void:
 			
 			
-	if is_on_floor():
-		player.comboCount=0
+
 	applyGravity(delta)
 	#print("g"+str(velocity.x))
 	applyFriction(delta)

@@ -1,4 +1,4 @@
-extends AnimatedSprite2D
+extends CharacterBody2D
 
 var enemy
 var triggered = false
@@ -8,12 +8,13 @@ var controls = false
 @onready var new_scene: PackedScene = preload("res://node_2d.tscn")
 
 func _ready() -> void:
-	play("default")
+	$AnimationPlayer.play("RESET")
 	enemy = get_parent().get_node("AnimatedSprite2D2")
 	enemy.play("default")
 
+	#$LFist.position=Vector2(-20,-20)
 func playPunch():
-	play("punch1")
+	$AnimationPlayer.play("LeftPunch")
 
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("F"):
@@ -22,6 +23,7 @@ func _process(delta: float) -> void:
 		if settings or controls:
 			return
 		triggered = true
+		$AnimationPlayer.play("LeftPunch")
 		get_parent().get_node("AnimationPlayer2").play("full")
 
 		await get_tree().create_timer(8).timeout
@@ -29,14 +31,15 @@ func _process(delta: float) -> void:
 		# Correct: pass the PackedScene directly
 		get_tree().change_scene_to_packed(new_scene)
 
-func _on_button_pressed() -> void:
+func _on_button_pressed2() -> void:
 	settings = true
 	get_parent().get_node("Buttons/AnimationPlayer").play("settings")
 	print("f")
 	await get_tree().create_timer(3).timeout
 	get_parent().get_node("Buttons/AnimationPlayer").play_backwards("settings")
 	settings=false
-func _on_button_pressed2() -> void:
+	
+func _on_button_pressed() -> void:
 	controls = true
 	get_parent().get_node("Buttons/AnimationPlayer").play("controls")
 	await get_tree().create_timer(5).timeout
@@ -44,7 +47,7 @@ func _on_button_pressed2() -> void:
 	controls=false
 func explode():
 	AudioManager.play_sfx(preload("res://sfx/explosion.wav"))
-
+	
 	get_parent().get_node("AnimatedSprite2D2").play("new_animation")
 
 func default():
@@ -54,3 +57,5 @@ func mus():
 	await get_tree().create_timer(1)
 	
 	AudioManager.play_music(preload("res://music/music2.mp3"),true, 0.5)
+func defaul2t():
+	$AnimationPlayer.play_backwards("LeftPunch")

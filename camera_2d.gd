@@ -18,7 +18,7 @@ func _ready() -> void:
 	#current = true
 	#AudioManager.play_music(preload("res://music/music.mp3"),true, 0.5)
 
-	player = get_parent().get_node_or_null("Zoomer")
+	player = get_parent().get_node_or_null("PlayerScratch")
 	enemy  = get_parent().get_node_or_null("Clanker1")
 	if player: player_height = get_shape_height(player)
 	if enemy:  enemy_height  = get_shape_height(enemy)

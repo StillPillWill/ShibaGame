@@ -1,10 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://bnh3akylov7l8"]
+[gd_scene load_steps=5 format=3 uid="uid://bnh3akylov7l8"]
 
 [ext_resource type="Texture2D" uid="uid://dg1huko8nok0i" path="res://images/Background/backgroundmun3.png" id="2_e7imf"]
 [ext_resource type="Texture2D" uid="uid://c3hc8h32yjgga" path="res://images/Background/backgroundmun4.png" id="2_uxx1g"]
-[ext_resource type="PackedScene" uid="uid://cpsvpm2q4pucy" path="res://zoomer.tscn" id="4_e7imf"]
-[ext_resource type="Script" uid="uid://dsi3l442eqmqo" path="res://scripts/move2.gd" id="5_e7imf"]
-[ext_resource type="Script" uid="uid://b26n0xukj64pv" path="res://scripts/camL1.gd" id="5_n8im6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_stse6"]
 size = Vector2(22310, 43)
@@ -50,14 +47,3 @@ shape = SubResource("RectangleShape2D_stse6")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
 position = Vector2(-10, 273)
 shape = SubResource("RectangleShape2D_e7imf")
-
-[node name="Zoomer" parent="." instance=ExtResource("4_e7imf")]
-position = Vector2(242, 444)
-scale = Vector2(1.615, 1.615)
-script = ExtResource("5_e7imf")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-scale = Vector2(1.615, 1.615)
-offset = Vector2(-100, 0)
-anchor_mode = 0
-script = ExtResource("5_n8im6")

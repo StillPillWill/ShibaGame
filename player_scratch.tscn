@@ -1,15 +1,24 @@
-[gd_scene load_steps=17 format=3 uid="uid://cwq6jbgk6orm8"]
+[gd_scene load_steps=29 format=3 uid="uid://cwq6jbgk6orm8"]
 
 [ext_resource type="Script" uid="uid://cfddqj00n4haa" path="res://scripts/connecticut.gd" id="1_e0833"]
 [ext_resource type="Script" uid="uid://bc35g37mj0fjh" path="res://scripts/movement.gd" id="1_egu30"]
 [ext_resource type="PackedScene" uid="uid://1soblptoyj0l" path="res://raycon.tscn" id="2_jc4xq"]
+[ext_resource type="Texture2D" uid="uid://2hedec18wjv3" path="res://images/MC/gun.png" id="3_05gsd"]
 [ext_resource type="Texture2D" uid="uid://cobbviohjhbju" path="res://images/MC/midsection.png" id="3_8qaqc"]
 [ext_resource type="Texture2D" uid="uid://bxdb87hv5i52q" path="res://images/MC/fist2.png" id="3_81xla"]
 [ext_resource type="PackedScene" uid="uid://1n8rddvfkh3t" path="res://engine.tscn" id="6_tu81x"]
+[ext_resource type="Texture2D" uid="uid://dqemj7o1ybehg" path="res://images/MC/clankmid.png" id="7_d5dtm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8e4ew"]
+size = Vector2(16, 39)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8qaqc"]
 atlas = ExtResource("3_81xla")
 region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d5dtm"]
+atlas = ExtResource("3_05gsd")
+region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_egu30"]
 animations = [{
@@ -20,7 +29,21 @@ animations = [{
 "loop": true,
 "name": &"default",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d5dtm")
+}],
+"loop": true,
+"name": &"new_animation",
+"speed": 5.0
 }]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xf0ge"]
+size = Vector2(12, 27)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_05gsd"]
+size = Vector2(9, 8.5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_egu30"]
 atlas = ExtResource("3_8qaqc")
@@ -37,8 +60,23 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="Animation" id="Animation_tu81x"]
-resource_name = "Stretch"
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d5dtm"]
+size = Vector2(18, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xf0ge"]
+atlas = ExtResource("7_d5dtm")
+region = Rect2(82, 3, 12, 23)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8e4ew"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xf0ge")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="Animation" id="Animation_05gsd"]
 resource_name = "EngineTurnLeft"
@@ -65,33 +103,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.0, -0.3141592653589793]
-}
-
-[sub_resource type="Animation" id="Animation_d5dtm"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Engine:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 22)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Engine:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
 }
 
 [sub_resource type="Animation" id="Animation_xf0ge"]
@@ -121,19 +132,163 @@ tracks/1/keys = {
 "values": [0.0, 0.3141592653589793]
 }
 
+[sub_resource type="Animation" id="Animation_1qt55"]
+resource_name = "LeftPunch"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LFist:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.16666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-17, 15), Vector2(-17, -6), Vector2(-46.5, -6)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LFist:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.0997389, 0.16640557),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 1.509709802975095, 1.509709802975095]
+}
+
+[sub_resource type="Animation" id="Animation_d5dtm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Engine:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 22)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Engine:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("RFist:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(17, 15)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("RFist:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("LFist:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-17, 15)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("LFist:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_8e4ew"]
+resource_name = "RightPunch"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RFist:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.16666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(17, 15), Vector2(22.035, -6.425), Vector2(46.43, -5.98)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RFist:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.16666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -1.509709802975095, -1.5097098]
+}
+
+[sub_resource type="Animation" id="Animation_tu81x"]
+resource_name = "Stretch"
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_05gsd"]
 _data = {
 &"EngineTurnLeft": SubResource("Animation_05gsd"),
 &"EngineTurnRight": SubResource("Animation_xf0ge"),
+&"LeftPunch": SubResource("Animation_1qt55"),
 &"RESET": SubResource("Animation_d5dtm"),
+&"RightPunch": SubResource("Animation_8e4ew"),
 &"Stretch": SubResource("Animation_tu81x")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tu81x"]
 size = Vector2(14, 42)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_d5dtm"]
+radius = 8.0
+height = 80.0
+
 [node name="PlayerScratch" type="CharacterBody2D"]
 script = ExtResource("1_egu30")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 37)
+shape = SubResource("RectangleShape2D_8e4ew")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 visible = false
@@ -144,22 +299,32 @@ zoom = Vector2(3.475, 3.475)
 [node name="RFist" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 position = Vector2(17, 15)
+scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_egu30")
+animation = &"new_animation"
+offset = Vector2(0, 10.075)
 metadata/_edit_group_ = true
 
 [node name="Node2D2" type="Node2D" parent="RFist"]
 position = Vector2(0.5, -4)
 rotation = -1.5707964
 
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RFist"]
+position = Vector2(0, 8.5)
+shape = SubResource("RectangleShape2D_xf0ge")
+
 [node name="LFist" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 position = Vector2(-17, 15)
 sprite_frames = SubResource("SpriteFrames_egu30")
-metadata/_edit_group_ = true
 
 [node name="Node2D2" type="Node2D" parent="LFist"]
 position = Vector2(0.5, -4)
 rotation = -1.5707964
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LFist"]
+position = Vector2(0.5, -0.75)
+shape = SubResource("RectangleShape2D_05gsd")
 
 [node name="Midsection" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -171,8 +336,8 @@ script = ExtResource("1_e0833")
 follower_scene = ExtResource("2_jc4xq")
 follower_scale = 1.0
 follower_rotation_offset = 90.0
-follower_speed_min = 59.0
-follower_speed_max = 59.0
+follower_speed_min = 100.0
+follower_speed_max = 100.0
 spawn_interval = 0.125
 node_a_path = NodePath(".")
 node_b_path = NodePath("../../RFist/Node2D2")
@@ -187,8 +352,8 @@ script = ExtResource("1_e0833")
 follower_scene = ExtResource("2_jc4xq")
 follower_scale = 1.0
 follower_rotation_offset = 90.0
-follower_speed_min = 59.0
-follower_speed_max = 59.0
+follower_speed_min = 100.0
+follower_speed_max = 100.0
 spawn_interval = 0.125
 node_a_path = NodePath(".")
 node_b_path = NodePath("../../LFist/Node2D2")
@@ -201,6 +366,17 @@ line_width = 0.0
 [node name="Node2D3" type="Node2D" parent="Midsection"]
 position = Vector2(0, 13)
 rotation = -1.5707964
+
+[node name="Area2D" type="Area2D" parent="Midsection"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Midsection/Area2D"]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_d5dtm")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Midsection"]
+position = Vector2(-0.675, -26)
+scale = Vector2(1.305, 1.305)
+sprite_frames = SubResource("SpriteFrames_8e4ew")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -227,6 +403,13 @@ handle_rotation_offset_a = 90.0
 handle_mode_b = 1
 line_width = 0.0
 
-[node name="CollisionShape" type="CollisionShape2D" parent="."]
-position = Vector2(0, 37)
+[node name="CollisionShape" type="CollisionShape2D" parent="Engine"]
+position = Vector2(0, 30)
+scale = Vector2(2, 2)
 shape = SubResource("RectangleShape2D_tu81x")
+
+[node name="HitArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea"]
+position = Vector2(0, 16)
+shape = SubResource("CapsuleShape2D_d5dtm")

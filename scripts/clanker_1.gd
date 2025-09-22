@@ -4,7 +4,7 @@ extends CharacterBody2D
 @export var friction=5
 @export var gravity = 1500
 @export var jumpSpeed = 1000
-@onready var player=get_parent().get_node("Zoomer")
+@onready var player=get_parent().get_node("PlayerScratch")
 var recentAttack=""
 var screen_width = get_viewport_rect().size.x
 var cooldown=false
@@ -93,7 +93,7 @@ func _physics_process(delta: float) -> void:
 	if not attackFlag and not attackInProgress and not isShooting:
 		if dac > 3:
 			attackPlayer()
-			print("attacking")
+			#print("attacking")
 
 			
 	if attackLaunch:
@@ -118,7 +118,7 @@ func _physics_process(delta: float) -> void:
 			attackFlag = false
 			attackLaunch = false
 			velocityBuffer = Vector2.ZERO
-			print("stuff")
+			#print("stuff")
 
 
 
@@ -153,7 +153,7 @@ func _on_hitbox_area_entered(body: Node2D) -> void:
 		inRange["KickHitbox"]=true
 	if "PunchHitbox" in str(body):
 		inRange["PunchHitbox"]=true
-	print("entered"+str(body))
+	#print("entered"+str(body))
 
 func _on_hitbox_area_exited(body: Node2D) -> void:
 	if "KickHitbox" in str(body):
@@ -183,23 +183,29 @@ func attackName(attack, direction):
 		return attack
 
 func hit(attack,direction):
-	print("hit")
+	#print("hit")
 	playerDir=direction
 	animationState = [attack, animationTimer[attack]]
 	var attackName=attackName(attack,direction)
 	if attack == "PunchHitbox":
 		velocityBuffer.y += player.velocity.y
-		print("super")
+		#print("super")
 	AudioManager.play_sfx(preload("res://sfx/hit2.wav"))
 	hp-=1
-	print("hit")
+	#print("hit")
 	if hp==0:
 		dead()
 		
 func _on_hitbox_body_entered(body: Node2D) -> void:
-	if "Zoomer" in str(body) and attackFlag:
+	if "PlaterScratch" in str(body) and attackFlag:
 		player.slamHit()
-
+	print(body)
+	
+	if body.has_method("enstein"):
+		if body.sender=="player":
+			hp-=1
+		
+	
 func dead():
 	isDead=true
 	$AnimatedSprite2D.play("explode")
@@ -209,7 +215,7 @@ func dead():
 	hide()
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)
-	print("dead")
+	#print("dead")
 	get_parent().get_node("AttackUI").show()
 	get_parent().get_node("AttackUI/Label").text="You Win"
 	get_parent().get_node("AttackUI/Label2").show()
@@ -431,6 +437,7 @@ func shoot(times):
 		var bullet_speed = 400
 		c.velocity = dir * bullet_speed
 		c.scale = Vector2(0.25, 0.25)
+		c.sender="enemy"
 		get_parent().add_child(c)
 		AudioManager.play_sfx(laser_sfx)
 
