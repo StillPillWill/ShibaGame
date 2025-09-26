@@ -7,6 +7,8 @@
 radius = 16.0312
 
 [node name="Bullet" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 15
 script = ExtResource("1_v8qja")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -14,6 +16,8 @@ texture_filter = 1
 texture = ExtResource("1_v7oki")
 
 [node name="HitArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 15
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea"]
 shape = SubResource("CircleShape2D_v7oki")
@@ -22,14 +26,13 @@ shape = SubResource("CircleShape2D_v7oki")
 emitting = false
 amount = 500
 lifetime = 0.2
-one_shot = true
 emission_shape = 2
 emission_sphere_radius = 16.0
 spread = 180.0
 gravity = Vector2(0, 0)
 initial_velocity_min = 106.45
 initial_velocity_max = 468.5
-color = Color(0.0714296, 0.534515, 0.805171, 1)
+color = Color(0.43492773, 0.7297961, 1, 1)
 
-[connection signal="body_entered" from="HitArea" to="." method="_on_hit_area_body_entered"]
+[connection signal="area_entered" from="HitArea" to="." method="_on_hit_area_entered"]
 [connection signal="body_shape_entered" from="HitArea" to="." method="_on_hit_area_body_shape_entered"]

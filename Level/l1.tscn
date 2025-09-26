@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bnh3akylov7l8"]
+[gd_scene load_steps=6 format=3 uid="uid://bnh3akylov7l8"]
 
 [ext_resource type="Texture2D" uid="uid://dg1huko8nok0i" path="res://images/Background/backgroundmun3.png" id="2_e7imf"]
 [ext_resource type="Texture2D" uid="uid://c3hc8h32yjgga" path="res://images/Background/backgroundmun4.png" id="2_uxx1g"]
+[ext_resource type="PackedScene" uid="uid://cwq6jbgk6orm8" path="res://player_scratch.tscn" id="3_stse6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_stse6"]
 size = Vector2(22310, 43)
@@ -47,3 +48,5 @@ shape = SubResource("RectangleShape2D_stse6")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
 position = Vector2(-10, 273)
 shape = SubResource("RectangleShape2D_e7imf")
+
+[node name="PlayerScratch" parent="." instance=ExtResource("3_stse6")]

@@ -10,9 +10,9 @@ func _ready() -> void:
 	
 func _physics_process(delta: float) -> void:
 	$ColorRect2/ColorRect.scale.x=relu(float(clanker.hp)/clankerInitHp)
-	print(clankerInitHp)
-	print(clanker.hp)
-	print(clanker.hp/clankerInitHp)
+	#print(clankerInitHp)
+	#print(clanker.hp)
+	#print(clanker.hp/clankerInitHp)
 func relu(x):
 	if x<0:
 		return 0

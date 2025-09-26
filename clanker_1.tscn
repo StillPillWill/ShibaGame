@@ -655,7 +655,7 @@ colors = PackedColorArray(0, 0, 0, 1, 0.880284, 0.36827, 0.161963, 1, 0.802552, 
 gradient = SubResource("Gradient_55txb")
 width = 2
 
-[node name="Clanker1" type="CharacterBody2D"]
+[node name="Clanker1" type="CharacterBody2D" groups=["Enemy"]]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_pkvd0")
@@ -665,12 +665,12 @@ position = Vector2(0, 0.25)
 scale = Vector2(0.57, 0.925)
 shape = SubResource("RectangleShape2D_pkvd0")
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="." groups=["Enemy"]]
 scale = Vector2(0.8, 0.95)
 collision_layer = 2
-collision_mask = 3
+collision_mask = 15
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" groups=["Enemy"]]
 shape = SubResource("RectangleShape2D_pkvd0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -678,7 +678,7 @@ texture_filter = 1
 position = Vector2(2, 0)
 scale = Vector2(0.48, 0.48)
 sprite_frames = SubResource("SpriteFrames_55txb")
-animation = &"idle"
+animation = &"shoot"
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="AnimatedSprite2D"]
 position = Vector2(-12, 0)
@@ -715,9 +715,13 @@ initial_velocity_max = 298.97
 angle_min = -123.6
 angle_max = 722.5
 
+[node name="sp" type="Node2D" parent="AnimatedSprite2D"]
+position = Vector2(-2.0833333, -39.583332)
+
 [node name="Engine" parent="." instance=ExtResource("6_55txb")]
-position = Vector2(1, 1)
-scale = Vector2(0.5, 0.5)
+position = Vector2(0.52, -0.035)
+scale = Vector2(0.475, 0.475)
 script = ExtResource("7_i8k5q")
 
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

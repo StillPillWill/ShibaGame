@@ -20,7 +20,7 @@ var attack=false
 var target=[0,0]
 var attackFlag=false
 var shotsFired=false
-var hp=30
+var hp=50
 const ROTATE_BEFORE_SHOOT = 0.45
 
 var attackMode=""
@@ -52,17 +52,73 @@ var isPoweringUp = false
 var powerupTimer = 0.0
 const POWERUP_DURATION = 2.15 # The duration of the powerup animation
 var isShooting = false
-var laser_sfx = preload("res://sfx/laserShoot.wav")
-@export var per_shot_delay = 0.2
-@export var between_shots_delay = 0.06
+var laser_sfx = preload("res://sfx/enemyShoot.wav")
+@export var per_shot_delay = 0.35
+@export var between_shots_delay = 0.3
 @export var max_shots_allowed = 100
 @export var bullet_lifetime = 5.0
 
 func _ready():
+	# --- Standard Setup ---
 	$Hitbox.area_entered.connect(_on_hitbox_area_entered)
 	$Hitbox.area_exited.connect(_on_hitbox_area_exited)
 	$AnimatedSprite2D.play("idle")
+	
+	# --- Variable Initializations ---
 
+	# State & Flags
+	hoverOn = false
+	attackInProgress = false
+	cooldown = false
+	highFlag = true
+	attack = false
+	attackFlag = false
+	shotsFired = false
+	isDead = false
+	upDownInFlight = false
+	attackLaunch = false
+	isPoweringUp = false
+	isShooting = false
+
+	# Data & Trackers
+	recentAttack = ""
+	previousAttack = null
+	dac = 0
+	animationState = ["idle", 0.5]
+	playerDir = [0, 0]
+	target = [0, 0]
+	hp = 50
+	attackMode = ""
+	hitStun = 0
+	justFloor = null
+	powerupTimer = 0.0
+
+	# Dictionaries
+	inRange = {"KickHitbox": false, "PunchHitbox": false}
+
+	# Physics & Environment
+	# Exported variables can be overridden here if needed
+	friction = 5
+	gravity = 1500
+	jumpSpeed = 1000
+	bullet_spawn_offset = Vector2(0, -30)
+	
+	# This value depends on the scene being ready
+	screen_width = get_viewport_rect().size.x
+	
+	# Vector2 Initializations
+	velocityBuffer = Vector2.ZERO
+	desiredVelocity = Vector2.ZERO
+
+	# Smooth Attack Config
+	attackAccel = 3000.0
+	maxAttackSpeed = 3000.0
+
+	# Shooting Attack Config
+	per_shot_delay = 0.2
+	between_shots_delay = 0.06
+	max_shots_allowed = 100
+	bullet_lifetime = 5.0
 var hoverOn=false
 var attackInProgress=false
 @export var bullet_spawn_offset = Vector2(0, -30) # local sprite offset (x right, y down)
@@ -148,13 +204,16 @@ func applyGravity(delta):
 
 # --- Unchanged helper functions from here ... ---
 
-func _on_hitbox_area_entered(body: Node2D) -> void:
-	if "KickHitbox" in str(body):
+func _on_hitbox_area_entered(area) -> void:
+	if "KickHitbox" in str(area):
 		inRange["KickHitbox"]=true
-	if "PunchHitbox" in str(body):
+	if "PunchHitbox" in str(area):
 		inRange["PunchHitbox"]=true
 	#print("entered"+str(body))
-
+	print("entered :", area.get_parent().get_parent().is_in_group("Player"),attackFlag)
+	if area.get_parent().get_parent().is_in_group("Player") and attackFlag:
+		get_parent().get_node("PlayerScratch").slamHit()
+		
 func _on_hitbox_area_exited(body: Node2D) -> void:
 	if "KickHitbox" in str(body):
 		inRange["KickHitbox"]=false
@@ -182,14 +241,15 @@ func attackName(attack, direction):
 	else:
 		return attack
 
-func hit(attack,direction):
+func hit(direction,attack="none"):
 	#print("hit")
 	playerDir=direction
-	animationState = [attack, animationTimer[attack]]
-	var attackName=attackName(attack,direction)
-	if attack == "PunchHitbox":
-		velocityBuffer.y += player.velocity.y
-		#print("super")
+	if attack != "none":
+		animationState = [attack, animationTimer[attack]]
+		var attackName=attackName(attack,direction)
+		if attack == "PunchHitbox":
+			velocityBuffer.y += player.velocity.y
+			#print("super")
 	AudioManager.play_sfx(preload("res://sfx/hit2.wav"))
 	hp-=1
 	#print("hit")
@@ -197,14 +257,9 @@ func hit(attack,direction):
 		dead()
 		
 func _on_hitbox_body_entered(body: Node2D) -> void:
-	if "PlaterScratch" in str(body) and attackFlag:
-		player.slamHit()
-	print(body)
-	
-	if body.has_method("enstein"):
-		if body.sender=="player":
-			hp-=1
-		
+	pass
+	#print(body)
+
 	
 func dead():
 	isDead=true
@@ -213,12 +268,11 @@ func dead():
 	$AnimatedSprite2D/CPUParticles2D.emitting = true
 	await get_tree().create_timer(0.5).timeout
 	hide()
-	set_deferred("collision_layer", 0)
-	set_deferred("collision_mask", 0)
+
 	#print("dead")
 	get_parent().get_node("AttackUI").show()
-	get_parent().get_node("AttackUI/Label").text="You Win"
 	get_parent().get_node("AttackUI/Label2").show()
+	
 func attackPlayer():
 	dac = 0
 	# single-frame upward impulse to start jump
@@ -226,7 +280,7 @@ func attackPlayer():
 	attackInProgress = true
 	shotsFired = false
 	var c = randi_range(0, 4)
-	if c == 0:
+	if c == 0 or player.position.distance_to(position)<200:
 		attackMode = "Shoot"
 	else:
 		attackMode = "upDown"
@@ -337,51 +391,6 @@ func continueAttack():
 			shotsFired = true
 		return
 
-	# -----------------------
-	# SHOOT mode: apex -> hover -> powerup (single block)
-	# -----------------------
-	if attackMode == "Shoot":
-		# detect apex -> enter hovering/powerup once
-		if velocity.y > 0 and not hoverOn:
-			hoverOn = true
-			# stop movement while powering up
-			velocity.y = 0
-			velocity = Vector2.ZERO
-			isPoweringUp = true
-			powerupTimer = POWERUP_DURATION
-			$AnimatedSprite2D.play("powerup")
-			shotsFired = true
-		return
-
-	# SHOOT: wait until apex then hover, play powerup (handled by handlePowerup)
-	if attackMode == "Shoot":
-		if velocity.y > 0 and not hoverOn:
-			hoverOn = true
-			velocity.y = 0
-			velocity = Vector2.ZERO
-			isPoweringUp = true
-			powerupTimer = POWERUP_DURATION
-			$AnimatedSprite2D.play("powerup")
-			shotsFired = true
-		return
-
-
-	# SHOOT: wait until apex then hover, play powerup (handled by handlePowerup)
-	if attackMode == "Shoot":
-		if velocity.y > 0 and not hoverOn:
-			hoverOn = true
-			velocity.y = 0
-			# stop movement completely while powering up
-			velocity = Vector2.ZERO
-			# prepare sprite rotation target (handled by handlePowerup)
-			isPoweringUp = true
-			powerupTimer = POWERUP_DURATION
-			$AnimatedSprite2D.play("powerup")
-			# store that we started the powerup so we don't re-enter
-			shotsFired = true
-		return
-
-# helper to keep angles small for comparison
 func angwrap(a):
 	if a > PI:
 		return a - PI * 2
@@ -403,55 +412,76 @@ func handlePowerup(delta: float):
 		isPoweringUp = false
 		# start shooting sequence; shoot() will rotate the sprite exactly when play("shoot") runs
 		isShooting = true
-		shoot(10)
+		shoot(21)
 
-func shoot(times):
-	# lock states so animations won't be overridden
+func shoot(times: int):
+	# --- 1. Lock the Enemy's State ---
+	# This prevents the enemy from moving or doing anything else while shooting.
 	attackInProgress = false
 	attackFlag = false
 	hoverOn = true
-	velocity = Vector2.ZERO
 	isShooting = true
+	velocity = Vector2.ZERO
 
+	# --- 2. Firing Loop ---
+	# This loop will run for the number of 'times' you pass into the function.
 	for i in range(times):
+		# A safety check to stop the attack if the enemy is defeated mid-volley.
 		if isDead:
 			break
 
-		# retarget just before each shot
+		# --- 3. Aim Each Shot ---
+		# Get the direction from the enemy to the player's current position.
 		var dir = (player.position - position).normalized()
 
-		# rotate sprite to face player immediately before shot
+		# Point the sprite at the player. The '+ PI / 2' corrects the sprite's orientation.
 		$AnimatedSprite2D.rotation = dir.angle() + PI / 2
-
-		# compute spawn point using the sprite's rotation
-		var rotated_offset = bullet_spawn_offset.rotated($AnimatedSprite2D.rotation)
-		var spawn_pos = position + rotated_offset
-
-		# play shoot animation
+		
+		# --- 4. Instantiate and Configure the Bullet (The Runtime Change) ---
+		# Play the visual and sound effects just before the bullet appears.
 		$AnimatedSprite2D.play("shoot")
+		AudioManager.play_sfx(laser_sfx)
 		await get_tree().create_timer(per_shot_delay).timeout
 
-		# spawn bullet
-		var c = bullet.instantiate()
-		c.position = spawn_pos
-		var bullet_speed = 400
-		c.velocity = dir * bullet_speed
-		c.scale = Vector2(0.25, 0.25)
-		c.sender="enemy"
-		get_parent().add_child(c)
-		AudioManager.play_sfx(laser_sfx)
+		# Create a new bullet instance from your scene.
+		var bullet_instance = bullet.instantiate()
+		
+		# Set its initial properties (position, velocity, etc.).
+		var rotated_offset = bullet_spawn_offset.rotated($AnimatedSprite2D.rotation)
+		bullet_instance.position = $AnimatedSprite2D/sp.global_position
+		bullet_instance.velocity = dir * 800
+		bullet_instance.scale = Vector2(0.25, 0.25)
 
-		# small pause before next shot
+		# This is how we differentiate it from a player's bullet.
+		bullet_instance.sender = "Enemy"
+
+		# -- THIS IS THE CRITICAL RUNTIME CONFIGURATION --
+		## The bullet now exists on Layer 4 ('enemy_bullets').
+		#bullet_instance.collision_layer = 1 << 3
+		## The bullet will now only look for things on Layer 1 ('player').
+		#bullet_instance.collision_mask = 1 << 0
+		# -------------------------------------------------
+
+		# Add the fully configured bullet to the game world.
+		get_parent().add_child(bullet_instance)
+
+		# Wait briefly before the next shot.
 		await get_tree().create_timer(between_shots_delay).timeout
 
-	# finish shooting
+	# --- 5. Reset the Enemy's State --- 
+	# Once the loop is done, unlock the enemy so it can move again.
 	isShooting = false
-	hoverOn = false
+	hoverOn = false 
 	attackInProgress = false
-	attackFlag = true
+	attackFlag = true 
 	$AnimatedSprite2D.rotation = 0
 	$AnimatedSprite2D.play("idle")
 
+func take_damage():
+	print("hit enemy")
+	#p-=1
+	hit(Vector2(1,1))
+	
 func handleAnimations(delta=0, attack=null):
 	var anim = $AnimatedSprite2D
 	# prevent idle override while attacking/powering/shooting

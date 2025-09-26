@@ -271,14 +271,8 @@ func getDirection(keys):
 		out[1]-=1
 	return out
 	
-func slamHit():
-	
-	velocity.x=randf_range(-2000,2000)
-	velocity.y=-1000
-	print("f")
-	hp-=1
-	if hp==0:
-		dead()
+
+		
 func dead():
 	get_parent().get_node("AttackUI").show()
 	get_parent().get_node("AttackUI/Label").text="You Lose"

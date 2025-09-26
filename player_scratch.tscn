@@ -283,10 +283,10 @@ size = Vector2(14, 42)
 radius = 8.0
 height = 80.0
 
-[node name="PlayerScratch" type="CharacterBody2D"]
+[node name="PlayerScratch" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_egu30")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["Player"]]
 position = Vector2(0, 37)
 shape = SubResource("RectangleShape2D_8e4ew")
 
@@ -296,7 +296,7 @@ position = Vector2(2, -3)
 enabled = false
 zoom = Vector2(3.475, 3.475)
 
-[node name="RFist" type="AnimatedSprite2D" parent="."]
+[node name="RFist" type="AnimatedSprite2D" parent="." groups=["Player"]]
 texture_filter = 1
 position = Vector2(17, 15)
 scale = Vector2(0.8, 0.8)
@@ -309,11 +309,18 @@ metadata/_edit_group_ = true
 position = Vector2(0.5, -4)
 rotation = -1.5707964
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="RFist"]
-position = Vector2(0, 8.5)
+[node name="sp" type="Node2D" parent="RFist"]
+position = Vector2(0, 21.25)
+
+[node name="Area2D" type="Area2D" parent="RFist" groups=["Player"]]
+collision_mask = 3
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RFist/Area2D" groups=["Player"]]
+position = Vector2(0, 8.499998)
+scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("RectangleShape2D_xf0ge")
 
-[node name="LFist" type="AnimatedSprite2D" parent="."]
+[node name="LFist" type="AnimatedSprite2D" parent="." groups=["Player"]]
 texture_filter = 1
 position = Vector2(-17, 15)
 sprite_frames = SubResource("SpriteFrames_egu30")
@@ -322,7 +329,7 @@ sprite_frames = SubResource("SpriteFrames_egu30")
 position = Vector2(0.5, -4)
 rotation = -1.5707964
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LFist"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LFist" groups=["Player"]]
 position = Vector2(0.5, -0.75)
 shape = SubResource("RectangleShape2D_05gsd")
 
@@ -367,9 +374,9 @@ line_width = 0.0
 position = Vector2(0, 13)
 rotation = -1.5707964
 
-[node name="Area2D" type="Area2D" parent="Midsection"]
+[node name="Area2D" type="Area2D" parent="Midsection" groups=["Player"]]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Midsection/Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Midsection/Area2D" groups=["Player"]]
 position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_d5dtm")
 
@@ -385,7 +392,7 @@ libraries = {
 
 [node name="Engine" parent="." instance=ExtResource("6_tu81x")]
 position = Vector2(0, 22)
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.495, 0.495)
 
 [node name="Node2D" type="Node2D" parent="Engine"]
 position = Vector2(0, -12)
@@ -403,13 +410,16 @@ handle_rotation_offset_a = 90.0
 handle_mode_b = 1
 line_width = 0.0
 
-[node name="CollisionShape" type="CollisionShape2D" parent="Engine"]
+[node name="CollisionShape" type="CollisionShape2D" parent="Engine" groups=["Player"]]
 position = Vector2(0, 30)
 scale = Vector2(2, 2)
 shape = SubResource("RectangleShape2D_tu81x")
 
-[node name="HitArea" type="Area2D" parent="."]
+[node name="HitArea" type="Area2D" parent="." groups=["Player"]]
+collision_mask = 15
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea"]
-position = Vector2(0, 16)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea" groups=["Player"]]
+position = Vector2(0, 11)
 shape = SubResource("CapsuleShape2D_d5dtm")
+
+[connection signal="area_entered" from="HitArea" to="." method="_on_hit_area_area_entered"]

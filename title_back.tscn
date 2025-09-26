@@ -711,10 +711,10 @@ offset_left = 156.0
 offset_top = 74.0
 offset_right = 963.0
 offset_bottom = 555.0
-text = "Attack: F
+text = "Stretch: hold R
 Move: Arrow Keys
 Jump: Space
-Slow Time (beta): C "
+Shoot: Stretch+F"
 label_settings = SubResource("LabelSettings_ijk7b")
 horizontal_alignment = 1
 vertical_alignment = 1

@@ -1,22 +1,29 @@
-[gd_scene load_steps=2 format=3 uid="uid://bgghqccfrvjae"]
+[gd_scene load_steps=4 format=3 uid="uid://bgghqccfrvjae"]
+
+[ext_resource type="Texture2D" uid="uid://cvfvgbv5d1sly" path="res://images/Background/Gemini_Generated_Image_9d5mpx9d5mpx9d5m.png" id="1_e6eop"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gcdnq"]
 font_size = 241
 font_color = Color(0.743768, 0.119914, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnu63"]
+bg_color = Color(0.03529412, 0.03529412, 0.039215688, 1)
+
 [node name="AttackUI" type="CanvasLayer"]
 
 [node name="Back" type="Panel" parent="."]
+z_index = -3
 offset_top = -5.0
 offset_right = 1152.0
 offset_bottom = 649.0
 
 [node name="Label" type="Label" parent="."]
+z_index = -2
 offset_left = 4.0
 offset_top = 57.0
 offset_right = 1150.0
 offset_bottom = 591.0
-text = "you lose"
+text = "You Win"
 label_settings = SubResource("LabelSettings_gcdnq")
 
 [node name="Label2" type="Label" parent="."]
@@ -26,3 +33,19 @@ offset_top = 444.0
 offset_right = 653.0
 offset_bottom = 467.0
 text = "Playtesters let me know if you got this far"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+z_index = 2
+position = Vector2(570, 349)
+scale = Vector2(0.975, 0.975)
+texture = ExtResource("1_e6eop")
+
+[node name="Back" type="Panel" parent="Sprite2D"]
+modulate = Color(0.03137255, 0.03137255, 0.03529412, 1)
+z_index = -1
+offset_left = -605.12823
+offset_top = -381.53845
+offset_right = 638.97455
+offset_bottom = 365.12823
+theme_override_styles/panel = SubResource("StyleBoxFlat_rnu63")

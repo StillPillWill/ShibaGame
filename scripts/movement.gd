@@ -15,13 +15,14 @@ var fist_original_position: Vector2
 var max_stretch_distance = 100.0
 var bullet_speed = 700
 var isDead=false
+var hp=5
 # Punch buffering (non-blocking)
 var punch_queue = [] # array of {dir:int, t:int}
 var punch_state = 0 # 0 idle, 1 forward, 2 backward
 var current_punch_anim = ""
 const PUNCH_BUFFER_MS = 200
 const PUNCH_QUEUE_MAX = 2
-
+const shootSound=preload(("res://sfx/playerShoot.wav"))
 # Cache
 @onready var animation_player = $AnimationPlayer
 @onready var right_fist = $RFist
@@ -30,6 +31,11 @@ func _ready():
 	fist_original_position = right_fist.position
 	#Engine.time_scale=0.25
 func _physics_process(delta):
+	if isDead:
+		get_parent().get_node("AttackUI").show()
+		get_parent().get_node("AttackUI/Sprite2D").show()
+		return
+		
 	handle_gravity(delta)
 	handle_variable_jump()
 	handle_animations()
@@ -65,17 +71,21 @@ func _process(delta):
 		var entry = punch_queue[0]
 		punch_queue.remove_at(0)
 		var dir = entry["dir"]
-		current_punch_anim = "LeftPunch" if dir == -1 else "RightPunch"
+		animation_player.speed_scale=2
 		animation_player.play(current_punch_anim)
 		punch_state = 1
+	
 	elif punch_state == 1:
 		if not animation_player.is_playing():
-			animation_player.play_backwards(current_punch_anim)
+			animation_player.speed_scale=2
+			animation_player.play_backwards(current_punch_anim,2)
 			punch_state = 2
 	elif punch_state == 2:
 		if not animation_player.is_playing():
 			punch_state = 0
+			animation_player.speed_scale=1
 			current_punch_anim = ""
+		
 
 func handle_gravity(delta: float) -> void:
 	velocity.y += gravity * delta
@@ -111,10 +121,16 @@ func handle_combat_input() -> void:
 		if stretching:
 			shoot_bullet()
 		else:
-			# buffer with timestamp, limit queue length
-			if punch_queue.size() < PUNCH_QUEUE_MAX:
+			# Only allow punch if not currently punching
+			if punch_state == 0 and punch_queue.size() < PUNCH_QUEUE_MAX:
+				# Set the animation based on direction
+				if direction[0] > 0:
+					current_punch_anim = "RightPunch"
+				else:
+					current_punch_anim = "LeftPunch"
+				
 				punch_queue.append({"dir": direction[0], "t": Engine.get_physics_frames()})
-
+				
 
 func handle_jump_input() -> void:
 	if is_on_floor() and Input.is_action_just_pressed("ui_accept"):
@@ -131,19 +147,25 @@ func handle_stretch_release() -> void:
 		return_tween.tween_property(right_fist, "rotation", 0.0, 0.2).set_ease(Tween.EASE_OUT)
 
 func shoot_bullet() -> void:
+	AudioManager.play_sfx(shootSound)
 	var bullet_instance = bullet.instantiate()
 	get_tree().root.add_child(bullet_instance)
-	bullet_instance.global_position = right_fist.global_position
-	var bullet_direction = Vector2(cos(right_fist.rotation + PI / 2), sin(right_fist.rotation + PI / 2))
+
+	bullet_instance.global_position = right_fist.get_node("sp").global_position
+	var bullet_direction = Vector2.RIGHT.rotated(right_fist.rotation+PI/2)
 	bullet_instance.velocity = bullet_direction * bullet_speed
-	if randi_range(0,50)==5:
-		bullet_instance.modulate = Color(1, 0.3,0.5)
+
+	# ----------------
+
+	# Your original visual code
+	if randi_range(0, 50) == 5:
+		bullet_instance.modulate = Color(1, 0.3, 0.5)
 	else:
 		bullet_instance.modulate = Color(0.3, 1, 0.5)
+	
 	bullet_instance.scale = Vector2(0.3, 0.3)
-	bullet_instance.sender="Player"
-	#bullet_instance.collision_mask = 2
-	#bullet_instance.collision_layer = 2
+	bullet_instance.sender = "Player"
+	
 func jump() -> void:
 	var jump_v = -sqrt(2.0 * gravity * max_jump_height)
 	velocity.y = jump_v
@@ -212,4 +234,31 @@ func stretch() -> void:
 	if rot_tween and rot_tween.is_valid():
 		rot_tween.kill()
 	rot_tween = create_tween()
-	rot_tween.tween_property(right_fist, "rotation", target_angle, 0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+	rot_tween.tween_property(right_fist, "rotation", target_angle, 0.05).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+
+	
+func take_damage():
+	hp-=1
+	AudioManager.play_sfx(preload("res://sfx/hitHurt.wav"))
+	if hp<=0:
+		isDead=true
+		AudioManager.play_sfx(preload("res://sfx/death.wav"))
+
+func _on_hit_area_area_entered(area) -> void:
+	print(area)
+	if area.get_parent().get_parent()==get_node("RFist"):
+		print("entered")
+
+func slamHit():
+	
+	velocity.y=-1000
+	print("f")
+	hp-=1
+	#AudioManager.play_sfx(preload("res://sfx/thud2.wav"))
+
+	if hp==0:
+		isDead=true		
+		AudioManager.play_sfx(preload("res://sfx/death.wav"))
+	position.y-=6
+	velocity.x=randf_range(-5000,5000)
+	
