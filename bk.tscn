@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://7g22bnrhn06s"]
+
+[ext_resource type="Script" uid="uid://dadelw6l1kh1n" path="res://scripts/bk.gd" id="1_4vsc6"]
+
+[node name="Bk" type="Node2D"]
+script = ExtResource("1_4vsc6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]

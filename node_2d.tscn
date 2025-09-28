@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cwq6jbgk6orm8" path="res://player_scratch.tscn" id="1_rj586"]
 [ext_resource type="PackedScene" uid="uid://b8x75mfha5vkc" path="res://floor.tscn" id="3_0hol4"]
-[ext_resource type="Script" uid="uid://bvpp7rvpakf67" path="res://camera_2d.gd" id="4_0hol4"]
+[ext_resource type="Script" uid="uid://cppr8yuwdc724" path="res://scripts/camera_2d2.gd" id="3_rj586"]
 [ext_resource type="Script" uid="uid://c0ijbu1h4f1uw" path="res://scripts/hpBar.gd" id="5_4d7sh"]
 [ext_resource type="PackedScene" uid="uid://bgghqccfrvjae" path="res://attack_ui.tscn" id="5_kdubu"]
 [ext_resource type="PackedScene" uid="uid://kuu7joeo0vgx" path="res://clanker_1.tscn" id="6_kdubu"]
@@ -32,23 +32,12 @@ size = Vector2(202, 4091.5)
 [node name="PlayerScratch" parent="." instance=ExtResource("1_rj586")]
 position = Vector2(610, 405)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-texture_filter = 1
-position = Vector2(-7.999634, 744.5)
-scale = Vector2(7.621622, 1.7133334)
-texture = ExtResource("8_ir8iy")
-
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("floor")]
+[node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-6, -3)
-script = ExtResource("4_0hol4")
-player_padding = Vector2(200, 200)
-floor = NodePath("../Floor")
-smooth_speed = 55.215
-debug_prints = true
+script = ExtResource("3_rj586")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="Camera2D"]
-follow_viewport_scale = 1.4
+follow_viewport_enabled = true
 scroll_ignore_camera_zoom = true
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="Camera2D/ParallaxBackground"]

@@ -238,10 +238,13 @@ func stretch() -> void:
 
 	
 func take_damage():
+	if isDead:
+		return
 	hp-=1
 	AudioManager.play_sfx(preload("res://sfx/hitHurt.wav"))
 	if hp<=0:
 		isDead=true
+		
 		AudioManager.play_sfx(preload("res://sfx/death.wav"))
 
 func _on_hit_area_area_entered(area) -> void:
