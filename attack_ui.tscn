@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bgghqccfrvjae"]
 
-[ext_resource type="Texture2D" uid="uid://cvfvgbv5d1sly" path="res://images/Background/Gemini_Generated_Image_9d5mpx9d5mpx9d5m.png" id="1_e6eop"]
+[ext_resource type="Texture2D" uid="uid://dggem7tqxidhn" path="res://Untitled drawing (14).png" id="1_e6eop"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gcdnq"]
 font_size = 241
@@ -23,8 +23,13 @@ offset_left = 4.0
 offset_top = 57.0
 offset_right = 1150.0
 offset_bottom = 591.0
-text = "You Win"
+text = "  You Win"
 label_settings = SubResource("LabelSettings_gcdnq")
+
+[node name="Sprite2D" type="Sprite2D" parent="Label"]
+position = Vector2(587.00006, 266.00003)
+scale = Vector2(2.7694914, 1.4744898)
+texture = ExtResource("1_e6eop")
 
 [node name="Label2" type="Label" parent="."]
 visible = false
@@ -39,7 +44,6 @@ visible = false
 z_index = 2
 position = Vector2(570, 349)
 scale = Vector2(0.975, 0.975)
-texture = ExtResource("1_e6eop")
 
 [node name="Back" type="Panel" parent="Sprite2D"]
 modulate = Color(0.03137255, 0.03137255, 0.03529412, 1)
