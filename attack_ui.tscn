@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://bgghqccfrvjae"]
+[gd_scene load_steps=5 format=3 uid="uid://bgghqccfrvjae"]
 
 [ext_resource type="Texture2D" uid="uid://dggem7tqxidhn" path="res://Untitled drawing (14).png" id="1_e6eop"]
+[ext_resource type="Texture2D" uid="uid://c7fl4pgh0ogvl" path="res://images/Background/Gemini_Generated_Image_9d5mpx9d5mpx9d5m.png" id="2_rnu63"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gcdnq"]
 font_size = 241
@@ -31,19 +32,19 @@ position = Vector2(587.00006, 266.00003)
 scale = Vector2(2.7694914, 1.4744898)
 texture = ExtResource("1_e6eop")
 
-[node name="Label2" type="Label" parent="."]
-visible = false
-offset_left = 332.0
-offset_top = 444.0
-offset_right = 653.0
-offset_bottom = 467.0
+[node name="Label2" type="Label" parent="Label"]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 387.0
+offset_right = 649.0
+offset_bottom = 410.0
 text = "Playtesters let me know if you got this far"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
 z_index = 2
 position = Vector2(570, 349)
 scale = Vector2(0.975, 0.975)
+texture = ExtResource("2_rnu63")
 
 [node name="Back" type="Panel" parent="Sprite2D"]
 modulate = Color(0.03137255, 0.03137255, 0.03529412, 1)
