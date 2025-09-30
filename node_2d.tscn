@@ -32,23 +32,27 @@ size = Vector2(202, 4091.5)
 [node name="PlayerScratch" parent="." instance=ExtResource("1_rj586")]
 position = Vector2(610, 405)
 
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("floor")]
-position = Vector2(-6, -3)
-script = ExtResource("2_rj586")
-floor = NodePath("../Floor")
-
-[node name="ParallaxBackground" type="ParallaxBackground" parent="Camera2D"]
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 follow_viewport_enabled = true
 scroll_ignore_camera_zoom = true
 
-[node name="ParallaxLayer" type="ParallaxLayer" parent="Camera2D/ParallaxBackground"]
-motion_scale = Vector2(0.15, 0)
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera2D/ParallaxBackground/ParallaxLayer"]
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
 texture_filter = 1
 position = Vector2(-6.000244, -351)
 scale = Vector2(3.8006754, 3.7600648)
 texture = ExtResource("9_4d7sh")
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("floor")]
+position = Vector2(-6, -3)
+script = ExtResource("2_rj586")
+player_padding = Vector2(100, 100)
+enemy_padding = Vector2(100, 100)
+floor = NodePath("../Floor")
+smooth_speed = 8.0
+zoom_smooth_factor = 1.0
 
 [node name="Floor" parent="." instance=ExtResource("3_0hol4")]
 z_index = -600

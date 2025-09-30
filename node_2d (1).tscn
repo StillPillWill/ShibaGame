@@ -1,0 +1,155 @@
+[gd_scene load_steps=14 format=3 uid="uid://cnkriubujf6bq"]
+
+[ext_resource type="PackedScene" uid="uid://cwq6jbgk6orm8" path="res://player_scratch.tscn" id="1_rj586"]
+[ext_resource type="Script" uid="uid://bvpp7rvpakf67" path="res://camera_2d.gd" id="2_rj586"]
+[ext_resource type="PackedScene" uid="uid://b8x75mfha5vkc" path="res://floor.tscn" id="3_0hol4"]
+[ext_resource type="Script" uid="uid://c0ijbu1h4f1uw" path="res://scripts/hpBar.gd" id="5_4d7sh"]
+[ext_resource type="PackedScene" uid="uid://bgghqccfrvjae" path="res://attack_ui.tscn" id="5_kdubu"]
+[ext_resource type="PackedScene" uid="uid://kuu7joeo0vgx" path="res://clanker_1.tscn" id="6_kdubu"]
+[ext_resource type="Texture2D" uid="uid://bnljckswktned" path="res://images/Background/backgroundmun3.png" id="8_ir8iy"]
+[ext_resource type="Texture2D" uid="uid://xr1u8l5yfaq3" path="res://images/Background/munsky.png" id="9_4d7sh"]
+
+[sub_resource type="SystemFont" id="SystemFont_rj586"]
+oversampling = 10.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_4d7sh"]
+font = SubResource("SystemFont_rj586")
+font_size = 8
+
+[sub_resource type="Gradient" id="Gradient_55txb"]
+offsets = PackedFloat32Array(0, 0.518072, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.880284, 0.36827, 0.161963, 1, 0.802552, 0.0169532, 9.62615e-08, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4d7sh"]
+gradient = SubResource("Gradient_55txb")
+width = 2
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rj586"]
+size = Vector2(202, 4091.5)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="PlayerScratch" parent="." instance=ExtResource("1_rj586")]
+position = Vector2(610, 405)
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+follow_viewport_enabled = true
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+texture_filter = 1
+position = Vector2(-6.000244, -351)
+scale = Vector2(3.8006754, 3.7600648)
+texture = ExtResource("9_4d7sh")
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("floor")]
+position = Vector2(-6, -3)
+script = ExtResource("2_rj586")
+player_padding = Vector2(100, 100)
+enemy_padding = Vector2(100, 100)
+floor = NodePath("../Floor")
+zoom_smooth_factor = 1.0
+
+[node name="Floor" parent="." instance=ExtResource("3_0hol4")]
+z_index = -600
+position = Vector2(565, 677)
+scale = Vector2(32.7598, 1.85168)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("5_4d7sh")
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer"]
+offset_left = 419.0
+offset_top = 8.0
+offset_right = 719.0
+offset_bottom = 17.0
+color = Color(0.18307, 0.191798, 0.291955, 1)
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/ColorRect2"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 299.0
+offset_bottom = 7.855
+color = Color(0.708226, 0, 0.225572, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/ColorRect2"]
+top_level = true
+layout_mode = 0
+offset_left = 555.0
+offset_top = 7.0
+offset_right = 615.0
+offset_bottom = 30.0
+text = "Clanker"
+label_settings = SubResource("LabelSettings_4d7sh")
+
+[node name="AttackUI" parent="." instance=ExtResource("5_kdubu")]
+visible = false
+
+[node name="Clanker1" parent="." instance=ExtResource("6_kdubu")]
+position = Vector2(170, 434)
+scale = Vector2(2, 2)
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="."]
+position = Vector2(300, 440)
+rotation = 1.54859
+emitting = false
+amount = 73
+texture = SubResource("GradientTexture1D_4d7sh")
+lifetime = 0.16
+one_shot = true
+use_fixed_seed = true
+seed = 295901292
+emission_shape = 3
+emission_rect_extents = Vector2(1.02, 7)
+spread = 128.27
+gravity = Vector2(0, 344.86)
+initial_velocity_max = 298.97
+angle_min = -123.6
+angle_max = 722.5
+
+[node name="ParallaxBackground3" type="ParallaxBackground" parent="."]
+layer = 1
+visible = false
+follow_viewport_scale = 1.4
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground3"]
+motion_scale = Vector2(0.15, 0)
+motion_mirroring = Vector2(1776, 1182)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground3/ParallaxLayer"]
+texture_filter = 1
+position = Vector2(575, 681)
+scale = Vector2(0.98, 0.98)
+texture = ExtResource("8_ir8iy")
+
+[node name="ParallaxBackground2" type="ParallaxBackground" parent="."]
+visible = false
+follow_viewport_scale = 1.4
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground2"]
+motion_scale = Vector2(0.04, 0.07)
+motion_mirroring = Vector2(1776, 1182)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground2/ParallaxLayer"]
+texture_filter = 1
+position = Vector2(575.00006, 241)
+scale = Vector2(0.98, 0.98)
+texture = ExtResource("9_4d7sh")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(-2256, -1297)
+shape = SubResource("RectangleShape2D_rj586")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(2313, -1396)
+shape = SubResource("RectangleShape2D_rj586")

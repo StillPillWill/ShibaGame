@@ -271,7 +271,7 @@ func dead():
 
 	#print("dead")
 	get_parent().get_node("AttackUI").show()
-	get_parent().get_node("AttackUI/Label2").show()
+	get_parent().get_node("AttackUI/Label").show()
 	
 func attackPlayer():
 	dac = 0

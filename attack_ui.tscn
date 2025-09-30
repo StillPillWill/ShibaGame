@@ -19,6 +19,7 @@ offset_right = 1152.0
 offset_bottom = 649.0
 
 [node name="Label" type="Label" parent="."]
+visible = false
 z_index = -2
 offset_left = 4.0
 offset_top = 57.0
@@ -41,6 +42,7 @@ offset_bottom = 410.0
 text = "Playtesters let me know if you got this far"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
 z_index = 2
 position = Vector2(570, 349)
 scale = Vector2(0.975, 0.975)
