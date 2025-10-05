@@ -44,7 +44,7 @@ func _physics_process(delta):
 	start_tween(Vector2.ZERO, friction_time)
 
 	# Stretch handling (held)
-	if Input.is_action_pressed("R"):
+	if Input.is_action_pressed("Stretch"):
 		stretch()
 
 	handle_combat_input() # enqueues punches or shoots when stretching
@@ -91,7 +91,7 @@ func handle_gravity(delta: float) -> void:
 	velocity.y += gravity * delta
 
 func handle_variable_jump() -> void:
-	if Input.is_action_just_released("ui_accept") and velocity.y < 0:
+	if Input.is_action_just_released("Jump") and velocity.y < 0:
 		var min_v = -sqrt(2.0 * gravity * min_jump_height)
 		if velocity.y < min_v:
 			velocity.y = min_v
@@ -108,16 +108,16 @@ func handle_movement_input() -> void:
 		velocity.x = 0
 		return
 
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed("Left"):
 		start_tween(Vector2(-speed, 0), accel_time)
-	elif Input.is_action_pressed("ui_right"):
+	elif Input.is_action_pressed("Right"):
 		start_tween(Vector2(speed, 0), accel_time)
 	else:
 		start_tween(Vector2.ZERO, friction_time)
 
 func handle_combat_input() -> void:
 	# If stretching, F shoots immediately; otherwise enqueue punch (non-blocking)
-	if Input.is_action_just_pressed("F"):
+	if Input.is_action_just_pressed("Attack"):
 		if stretching:
 			shoot_bullet()
 		else:
@@ -133,11 +133,11 @@ func handle_combat_input() -> void:
 				
 
 func handle_jump_input() -> void:
-	if is_on_floor() and Input.is_action_just_pressed("ui_accept"):
+	if is_on_floor() and Input.is_action_just_pressed("Jump"):
 		jump()
 
 func handle_stretch_release() -> void:
-	if Input.is_action_just_released("R"):
+	if Input.is_action_just_released("Stretch"):
 		stretching = false
 		if rot_tween and rot_tween.is_valid():
 			rot_tween.kill()
@@ -171,7 +171,7 @@ func jump() -> void:
 	velocity.y = jump_v
 
 func get_direction() -> void:
-	var input_vector = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var input_vector = Input.get_vector("Left", "Right", "Up", "Down")
 	if input_vector.x != 0:
 		direction[0] = sign(input_vector.x)
 	direction[1] = input_vector.y
@@ -191,29 +191,29 @@ func handle_animations() -> void:
 	if stretching:
 		return
 
-	if Input.is_action_just_pressed("ui_left"):
+	if Input.is_action_just_pressed("Left"):
 		animation_player.play("EngineTurnLeft")
-	elif Input.is_action_just_pressed("ui_right"):
+	elif Input.is_action_just_pressed("Right"):
 		animation_player.play("EngineTurnRight")
-	elif Input.is_action_just_released("ui_left") or Input.is_action_just_released("ui_right"):
-		if not Input.is_action_pressed("ui_left") and not Input.is_action_pressed("ui_right"):
+	elif Input.is_action_just_released("Left") or Input.is_action_just_released("Right"):
+		if not Input.is_action_pressed("Left") and not Input.is_action_pressed("Right"):
 			animation_player.play("RESET")
 
 	# Play RESET when stopping due to friction
-	if is_on_floor() and is_zero_approx(velocity.x) and not Input.is_action_pressed("ui_left") and not Input.is_action_pressed("ui_right"):
+	if is_on_floor() and is_zero_approx(velocity.x) and not Input.is_action_pressed("Left") and not Input.is_action_pressed("Right"):
 		var anim = animation_player.current_animation
 		if anim != "RESET" and anim != "EngineTurnLeft" and anim != "EngineTurnRight" and anim != "RightPunch" and anim != "LeftPunch":
 			animation_player.play("RESET")
 
 func stretch() -> void:
-	if not Input.is_action_pressed("R"):
+	if not Input.is_action_pressed("Stretch"):
 		stretching = false
 		return
 	# start stretching — block movement while held
 	stretching = true
 
 	# require directional input to stretch
-	if not (Input.is_action_pressed("ui_right") or Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_down")):
+	if not (Input.is_action_pressed("Right") or Input.is_action_pressed("Left") or Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_down")):
 		return
 
 	var input_dir = Vector2(direction[0], direction[1])

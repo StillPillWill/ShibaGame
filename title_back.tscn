@@ -1,8 +1,9 @@
-[gd_scene load_steps=56 format=3 uid="uid://bk4ys1id4g50l"]
+[gd_scene load_steps=57 format=3 uid="uid://bk4ys1id4g50l"]
 
-[ext_resource type="Texture2D" uid="uid://c0je3vqvmbp0m" path="res://images/Enemy/Clanker.png" id="2_460qx"]
+[ext_resource type="Texture2D" uid="uid://di17wpr21u0oh" path="res://images/Enemy/Clanker.png" id="2_460qx"]
 [ext_resource type="PackedScene" uid="uid://cwq6jbgk6orm8" path="res://player_scratch.tscn" id="3_ge5mx"]
-[ext_resource type="Texture2D" uid="uid://dulpq0v6pfkoo" path="res://images/Enemy/Explode1.png" id="3_imk73"]
+[ext_resource type="VideoStream" uid="uid://tg85k3fuatnl" path="res://images/output.ogv" id="3_ijk7b"]
+[ext_resource type="Texture2D" uid="uid://oo2lomxu4qu6" path="res://images/Enemy/Explode1.png" id="3_imk73"]
 [ext_resource type="Script" uid="uid://camt7stcx7r6b" path="res://scripts/animIntro.gd" id="3_oju5e"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijk7b"]
@@ -645,6 +646,34 @@ speed_scale = 0.5
 position = Vector2(592.455, 300)
 zoom = Vector2(40, 40)
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 999
+visible = false
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="CanvasLayer"]
+anchors_preset = -1
+anchor_left = 0.257
+anchor_right = 0.73300004
+anchor_bottom = 0.88100004
+offset_left = -10.063995
+offset_top = 53.0
+offset_right = 105.583984
+offset_bottom = 150.112
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("3_ijk7b")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+z_index = -4
+anchors_preset = -1
+anchor_right = 0.703
+anchor_bottom = 0.633
+offset_left = -12.0
+offset_top = -39.000015
+offset_right = 545.144
+offset_bottom = 422.81598
+color = Color(0, 0, 0, 1)
+
 [node name="PlayerScratch" parent="." instance=ExtResource("3_ge5mx")]
 position = Vector2(732, 313)
 scale = Vector2(2.495, 2.495)
@@ -667,9 +696,9 @@ text = "Controls"
 [node name="Button2" type="Button" parent="Buttons"]
 custom_minimum_size = Vector2(5.445, 4.635)
 offset_left = 38.0
-offset_top = 237.0
+offset_top = 236.0
 offset_right = 255.8
-offset_bottom = 434.2
+offset_bottom = 363.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 0
 theme_override_font_sizes/font_size = 51
@@ -682,7 +711,7 @@ libraries = {
 &"": SubResource("AnimationLibrary_1ncow")
 }
 
-[node name="Label" type="Label" parent="Buttons"]
+[node name="Label2" type="Label" parent="Buttons"]
 offset_left = 255.0
 offset_top = 294.0
 offset_right = 918.0
@@ -692,35 +721,147 @@ label_settings = SubResource("LabelSettings_l4yqv")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Button3" type="Button" parent="Buttons"]
+custom_minimum_size = Vector2(5.445, 4.635)
+offset_left = 37.53
+offset_top = 365.0
+offset_right = 255.32959
+offset_bottom = 435.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 51
+theme_override_styles/normal = SubResource("StyleBoxFlat_oju5e")
+text = "Lore
+"
+
 [node name="Settings" type="CanvasLayer" parent="."]
+layer = 35
 visible = false
 
 [node name="Label" type="Label" parent="Settings"]
 offset_right = 1152.0
 offset_bottom = 648.0
-text = "Nothing Here Yet..."
+text = "Volume"
 label_settings = SubResource("LabelSettings_oju5e")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="HSlider" type="HSlider" parent="Settings"]
+z_index = 18
+offset_left = 383.0
+offset_top = 285.0
+offset_right = 803.0
+offset_bottom = 460.0
+mouse_default_cursor_shape = 2
+value = 100.0
+exp_edit = true
+
+[node name="Label2" type="Label" parent="Settings"]
+texture_filter = 6
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 143.0
+offset_bottom = 27.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Backspace to exit"
+
 [node name="Controls" type="CanvasLayer" parent="."]
 visible = false
 
-[node name="Label" type="Label" parent="Controls"]
-offset_left = 156.0
-offset_top = 74.0
-offset_right = 963.0
-offset_bottom = 555.0
-text = "Stretch: hold R
-Move: Arrow Keys
-Jump: Space
-Shoot: Stretch+F"
+[node name="ScrollContainer" type="ScrollContainer" parent="Controls"]
+offset_left = 295.0
+offset_top = 12.0
+offset_right = 796.0
+offset_bottom = 668.0
+horizontal_scroll_mode = 0
+metadata/_edit_group_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Controls/ScrollContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Controls/ScrollContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Controls/ScrollContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "UP :
+DOWN :
+LEFT :
+RIGHT :
+STRETCH :
+JUMP :
+ATTACK :"
 label_settings = SubResource("LabelSettings_ijk7b")
-horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="VBoxContainer2" type="VBoxContainer" parent="Controls/ScrollContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="UpBut" type="Button" parent="Controls/ScrollContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 50
+text = "/."
+
+[node name="DownBut" type="Button" parent="Controls/ScrollContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 50
+text = "fff"
+
+[node name="LeftBut" type="Button" parent="Controls/ScrollContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 50
+text = "fff"
+
+[node name="RightBut" type="Button" parent="Controls/ScrollContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 50
+text = "fff"
+
+[node name="Stretch" type="Button" parent="Controls/ScrollContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 50
+text = "fff"
+
+[node name="JumpBut" type="Button" parent="Controls/ScrollContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 50
+text = "fff"
+
+[node name="AttackBut" type="Button" parent="Controls/ScrollContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 50
+text = "fff"
+
+[node name="Label" type="Label" parent="Controls"]
+texture_filter = 6
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 143.0
+offset_bottom = 27.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Backspace to exit"
+
 [node name="Node2D" type="Node2D" parent="."]
+visible = false
 position = Vector2(621, 300)
 
+[connection signal="finished" from="CanvasLayer/VideoStreamPlayer" to="PlayerScratch" method="_on_video_stream_player_finished"]
 [connection signal="pressed" from="Buttons/Button" to="PlayerScratch" method="_on_button_pressed"]
 [connection signal="pressed" from="Buttons/Button2" to="PlayerScratch" method="_on_button_pressed2"]
+[connection signal="pressed" from="Buttons/Button3" to="PlayerScratch" method="_on_button_3_pressed"]
+[connection signal="pressed" from="Controls/ScrollContainer/HBoxContainer/VBoxContainer2/UpBut" to="PlayerScratch" method="_on_up_but_pressed"]
+[connection signal="pressed" from="Controls/ScrollContainer/HBoxContainer/VBoxContainer2/DownBut" to="PlayerScratch" method="_on_down_but_pressed"]
+[connection signal="pressed" from="Controls/ScrollContainer/HBoxContainer/VBoxContainer2/LeftBut" to="PlayerScratch" method="_on_left_but_pressed"]
+[connection signal="pressed" from="Controls/ScrollContainer/HBoxContainer/VBoxContainer2/RightBut" to="PlayerScratch" method="_on_right_but_pressed"]
+[connection signal="pressed" from="Controls/ScrollContainer/HBoxContainer/VBoxContainer2/Stretch" to="PlayerScratch" method="_on_stretch_pressed"]
+[connection signal="pressed" from="Controls/ScrollContainer/HBoxContainer/VBoxContainer2/JumpBut" to="PlayerScratch" method="_on_jump_but_pressed"]
+[connection signal="pressed" from="Controls/ScrollContainer/HBoxContainer/VBoxContainer2/AttackBut" to="PlayerScratch" method="_on_attack_but_pressed"]
