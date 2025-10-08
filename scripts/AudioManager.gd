@@ -4,7 +4,7 @@ extends Node
 var music_player: AudioStreamPlayer
 var sfx_players: Array = []
 var music_looping = false
-
+var mouseMode
 
 func _ready():
 	# Music player

@@ -1,10 +1,10 @@
 [gd_scene load_steps=101 format=3 uid="uid://kuu7joeo0vgx"]
 
 [ext_resource type="Script" uid="uid://bkk8y0es20121" path="res://scripts/clanker_1.gd" id="1_pkvd0"]
-[ext_resource type="Texture2D" uid="uid://c0je3vqvmbp0m" path="res://images/Enemy/Clanker.png" id="1_xa3bt"]
-[ext_resource type="Texture2D" uid="uid://dulpq0v6pfkoo" path="res://images/Enemy/Explode1.png" id="2_ym0yc"]
-[ext_resource type="Texture2D" uid="uid://banalfe8712uy" path="res://images/Enemy/attack_clanker.png" id="4_6h2aj"]
-[ext_resource type="Texture2D" uid="uid://bfop8x8sdegth" path="res://images/Enemy/attack_clanker_head.png" id="5_lxcjy"]
+[ext_resource type="Texture2D" uid="uid://di17wpr21u0oh" path="res://images/Enemy/Clanker.png" id="1_xa3bt"]
+[ext_resource type="Texture2D" uid="uid://oo2lomxu4qu6" path="res://images/Enemy/Explode1.png" id="2_ym0yc"]
+[ext_resource type="Texture2D" uid="uid://0js2hgv7xvg6" path="res://images/Enemy/attack_clanker.png" id="4_6h2aj"]
+[ext_resource type="Texture2D" uid="uid://ctig1q2dfkpfi" path="res://images/Enemy/attack_clanker_head.png" id="5_lxcjy"]
 [ext_resource type="PackedScene" uid="uid://1n8rddvfkh3t" path="res://engine.tscn" id="6_55txb"]
 [ext_resource type="Script" uid="uid://cu1symbnspg2l" path="res://scripts/engine.gd" id="7_i8k5q"]
 
@@ -678,7 +678,7 @@ texture_filter = 1
 position = Vector2(2, 0)
 scale = Vector2(0.48, 0.48)
 sprite_frames = SubResource("SpriteFrames_55txb")
-animation = &"shoot"
+animation = &"powerup"
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="AnimatedSprite2D"]
 position = Vector2(-12, 0)

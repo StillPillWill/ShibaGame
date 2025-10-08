@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bg4qgj3j6j05b"]
+
+[ext_resource type="PackedScene" uid="uid://cwq6jbgk6orm8" path="res://player_scratch.tscn" id="1_ub6kj"]
+
+[node name="Air" type="Node2D"]
+
+[node name="PlayerScratch" parent="." instance=ExtResource("1_ub6kj")]
+position = Vector2(154, 306)

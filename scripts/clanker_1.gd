@@ -21,6 +21,7 @@ var target=[0,0]
 var attackFlag=false
 var shotsFired=false
 var hp=50
+var initHp=hp
 const ROTATE_BEFORE_SHOOT = 0.45
 
 var attackMode=""
@@ -87,7 +88,7 @@ func _ready():
 	animationState = ["idle", 0.5]
 	playerDir = [0, 0]
 	target = [0, 0]
-	hp = 50
+	hp = 5
 	attackMode = ""
 	hitStun = 0
 	justFloor = null
@@ -124,8 +125,10 @@ var attackInProgress=false
 @export var bullet_spawn_offset = Vector2(0, -30) # local sprite offset (x right, y down)
 
 func _physics_process(delta: float) -> void:
+	
 	if isDead:
 		return
+	
 	if player.isDead:
 		rotation+=0.001
 		return
@@ -268,11 +271,23 @@ func dead():
 	$AnimatedSprite2D/CPUParticles2D.emitting = true
 	await get_tree().create_timer(0.5).timeout
 	hide()
-
+	airFight()
 	#print("dead")
+	#get_parent().get_node("AttackUI").show()
+	#get_parent().get_node("AttackUI/Label").show()
+
+
+func dead2():
+	isDead=true
+	$AnimatedSprite2D.play("explode")
+	AudioManager.play_sfx(preload("res://sfx/explosion.wav"))
+	$AnimatedSprite2D/CPUParticles2D.emitting = true
+	await get_tree().create_timer(0.5).timeout
+	hide()
+
+	print("dead")
 	get_parent().get_node("AttackUI").show()
 	get_parent().get_node("AttackUI/Label").show()
-	
 func attackPlayer():
 	dac = 0
 	# single-frame upward impulse to start jump
@@ -488,3 +503,23 @@ func handleAnimations(delta=0, attack=null):
 	if attackInProgress or isPoweringUp or isShooting:
 		return
 	anim.play("idle")
+
+func airFight():
+	hp = initHp
+	$Hitbox/CollisionShape2D.disabled=true
+	await get_tree().create_timer(3).timeout
+	show()
+	$AnimatedSprite2D.play_backwards("explode")
+	await get_tree().create_timer(2).timeout
+
+	#$Hitbox/CollisionShape2D.disabled=false
+	$AnimatedSprite2D.play("idle")
+	for i in range(200):
+		velocity.y-=20*0.016+gravity*0.016
+		move_and_slide()
+		await get_tree().create_timer(0.016).timeout
+	get_parent().get_node("Camera2D").enabled=false
+	get_parent().get_node("PlayerScratch/Camera2D").enabled=true
+	#get_parent().get_node("PlayerScratch/AnimationPlayer").play("Fly")
+	player.air()
+	queue_free()

@@ -16,6 +16,7 @@ var max_stretch_distance = 100.0
 var bullet_speed = 700
 var isDead=false
 var hp=5
+var mouseMode=AudioManager.mouseMode
 # Punch buffering (non-blocking)
 var punch_queue = [] # array of {dir:int, t:int}
 var punch_state = 0 # 0 idle, 1 forward, 2 backward
@@ -23,7 +24,7 @@ var current_punch_anim = ""
 const PUNCH_BUFFER_MS = 200
 const PUNCH_QUEUE_MAX = 2
 const shootSound=preload(("res://sfx/playerShoot.wav"))
-# Cache
+var aired=false
 @onready var animation_player = $AnimationPlayer
 @onready var right_fist = $RFist
 
@@ -35,7 +36,8 @@ func _physics_process(delta):
 		get_parent().get_node("AttackUI").show()
 		get_parent().get_node("AttackUI/Sprite2D").show()
 		return
-		
+	if aired:
+		return
 	handle_gravity(delta)
 	handle_variable_jump()
 	handle_animations()
@@ -102,11 +104,9 @@ func handle_normal_gameplay() -> void:
 
 func handle_movement_input() -> void:
 	# block movement while stretching
-	if stretching:
-		if mov_tween and mov_tween.is_valid():
-			mov_tween.kill()
-		velocity.x = 0
-		return
+
+	
+		
 
 	if Input.is_action_pressed("Left"):
 		start_tween(Vector2(-speed, 0), accel_time)
@@ -204,31 +204,43 @@ func handle_animations() -> void:
 		var anim = animation_player.current_animation
 		if anim != "RESET" and anim != "EngineTurnLeft" and anim != "EngineTurnRight" and anim != "RightPunch" and anim != "LeftPunch":
 			animation_player.play("RESET")
-
 func stretch() -> void:
 	if not Input.is_action_pressed("Stretch"):
 		stretching = false
 		return
-	# start stretching — block movement while held
 	stretching = true
 
-	# require directional input to stretch
-	if not (Input.is_action_pressed("Right") or Input.is_action_pressed("Left") or Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_down")):
-		return
+	var input_dir = Vector2.ZERO
+	var desired_pos = right_fist.position
 
-	var input_dir = Vector2(direction[0], direction[1])
-	if input_dir.length_squared() == 0:
-		return
-
-	var move_dir = input_dir.normalized()
-	var new_position = right_fist.position + move_dir * 5
-	var distance_from_origin = fist_original_position.distance_to(new_position)
-
-	if distance_from_origin <= max_stretch_distance:
-		right_fist.position = new_position
+	if mouseMode:
+		var mouse_global = get_global_mouse_position()
+		var parent_node := right_fist.get_parent() as Node2D
+		var ref := parent_node if parent_node else self
+		var mouse_local := ref.to_local(mouse_global)
+		var mouse_offset := mouse_local - fist_original_position
+		if mouse_offset.length_squared() == 0:
+			return
+		var desired_distance = min(mouse_offset.length(), max_stretch_distance)
+		var dir = mouse_offset.normalized()
+		desired_pos = fist_original_position + dir * desired_distance
+		input_dir = mouse_offset
 	else:
-		var direction_to_fist = (new_position - fist_original_position).normalized()
-		right_fist.position = fist_original_position + direction_to_fist * max_stretch_distance
+		if not (Input.is_action_pressed("Right") or Input.is_action_pressed("Left") or Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_down")):
+			return
+		input_dir = Vector2(direction[0], direction[1])
+		if input_dir.length_squared() == 0:
+			return
+		var move_dir = input_dir.normalized()
+		var new_position = right_fist.position + move_dir * 5
+		var distance_from_origin = fist_original_position.distance_to(new_position)
+		if distance_from_origin <= max_stretch_distance:
+			desired_pos = new_position
+		else:
+			var direction_to_fist = (new_position - fist_original_position).normalized()
+			desired_pos = fist_original_position + direction_to_fist * max_stretch_distance
+
+	right_fist.position = desired_pos
 
 	var target_angle = input_dir.angle() - PI / 2
 	if rot_tween and rot_tween.is_valid():
@@ -236,7 +248,6 @@ func stretch() -> void:
 	rot_tween = create_tween()
 	rot_tween.tween_property(right_fist, "rotation", target_angle, 0.05).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 
-	
 func take_damage():
 	if isDead:
 		return
@@ -265,3 +276,13 @@ func slamHit():
 	position.y-=6
 	velocity.x=randf_range(-5000,5000)
 	
+func air():
+	aired=true
+	$AnimationPlayer.play("RESET")
+
+	$AnimationPlayer.play("Fly")
+	await get_tree().create_timer(2).timeout
+	for x in range(0,200):
+		velocity.y-=20*0.0166+gravity*0.016
+		move_and_slide()
+		await get_tree().create_timer(0.016).timeout

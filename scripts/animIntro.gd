@@ -6,7 +6,7 @@ var settings = false
 var controls = false
 var waiting_for_key = false
 var current_action_to_bind = ""
-
+var prev=0
 @onready var new_scene: PackedScene = preload("res://node_2d.tscn")
 
 func _ready() -> void:
@@ -15,47 +15,54 @@ func _ready() -> void:
 	enemy.play("default")
 	# Initialize all button labels with current key bindings
 	_initialize_button_labels()
-var vid=false
+
 func playPunch():
 	$AnimationPlayer.play("LeftPunch")
 
 func _process(delta: float) -> void:
-	
 	var bus = AudioServer.get_bus_index("Master")
 	var db = linear_to_db(get_parent().get_node("Settings/HSlider").value / 100.0)
+	if db!= prev:
+		AudioManager.play_sfx(preload("res://sfx/thud2.wav"))
+	prev=db
 	AudioServer.set_bus_volume_db(bus, db)
 	
 	if Input.is_action_just_pressed("Attack"):
 		if triggered:
 			return
-		if settings or controls or vid:
+		if settings or controls:
 			return
 		triggered = true
+		if get_parent().get_node("Controls/CheckButton").button_pressed:
+
+			var ev1 := InputEventMouseButton.new(); ev1.button_index = MOUSE_BUTTON_RIGHT; InputMap.action_add_event("Stretch", ev1)
+			var ev2 := InputEventMouseButton.new(); ev2.button_index = MOUSE_BUTTON_LEFT;  InputMap.action_add_event("Attack", ev2)
+			AudioManager.mouseMode=true
+		else:
+			AudioManager.mouseMode=false
 		$AnimationPlayer.play("LeftPunch")
 		get_parent().get_node("AnimationPlayer2").play("full")
 		await get_tree().create_timer(8).timeout
 		get_tree().change_scene_to_packed(new_scene)
+
 	if Input.is_action_just_pressed("ui_text_backspace"):
 		if controls:
-			controls=false
+			controls = false
 			get_parent().get_node("Buttons/AnimationPlayer").play_backwards("controls")
-	
 		elif settings:
-			settings=false
-			get_parent().get_node("Buttons/AnimationPlayer").play_backwards("settings")	
-	
+			settings = false
+			get_parent().get_node("Buttons/AnimationPlayer").play_backwards("settings")
+
 func _on_button_pressed2() -> void:
 	settings = true
 	var ap = get_parent().get_node("Buttons/AnimationPlayer")
 	if ap: ap.play("settings")
 	print("f")
 
-	
 func _on_button_pressed() -> void:
 	controls = true
 	var ap = get_parent().get_node("Buttons/AnimationPlayer")
 	if ap: ap.play("controls")
-
 
 func explode():
 	AudioManager.play_sfx(preload("res://sfx/explosion.wav"))
@@ -67,7 +74,7 @@ func default():
 func mus():
 	AudioManager.play_sfx(preload("res://sfx/clang.mp3"))
 	await get_tree().create_timer(1).timeout
-	AudioManager.play_music(preload("res://music/music2.mp3"),true, 0.5)
+	AudioManager.play_music(preload("res://music/music2.mp3"), true, 0.5)
 
 func defaul2t():
 	$AnimationPlayer.play_backwards("LeftPunch")
@@ -105,10 +112,30 @@ func start_rebind(action_name: String) -> void:
 
 
 func _input(event):
+	# Global cancel (Backspace / Escape)
+	# handle even if not waiting_for_key so user can exit menus
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_text_backspace"):
+		# prefer closing controls first
+		if controls:
+			controls = false
+			var apc = get_parent().get_node_or_null("Buttons/AnimationPlayer")
+			if apc: apc.play_backwards("controls")
+			get_viewport().set_input_as_handled()
+			return
+		elif settings:
+			settings = false
+			var aps = get_parent().get_node_or_null("Buttons/AnimationPlayer")
+			if aps: aps.play_backwards("settings")
+			get_viewport().set_input_as_handled()
+			return
+
+	# If we're not waiting for a rebind, ignore rebind input handling
 	if not waiting_for_key:
 		return
+
+	# Rebinding logic
 	if event is InputEventKey and event.pressed and not event.echo:
-		# Consume the event to prevent it from triggering buttons
+		# Consume the event to prevent it from triggering other actions
 		get_viewport().set_input_as_handled()
 		
 		waiting_for_key = false
@@ -236,13 +263,3 @@ func _find_buttons_root():
 	if has_node("Buttons"):
 		return get_node("Buttons")
 	return null
-
-
-func _on_button_3_pressed() -> void:
-	get_parent().get_node("CanvasLayer").show()
-	vid=true
-	get_parent().get_node("CanvasLayer/VideoStreamPlayer").play()
-func _on_video_stream_player_finished() -> void:
-	get_parent().get_node("CanvasLayer").hide()
-	 # Replace with function body.
-	vid=false

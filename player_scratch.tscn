@@ -1,13 +1,13 @@
-[gd_scene load_steps=29 format=3 uid="uid://cwq6jbgk6orm8"]
+[gd_scene load_steps=30 format=3 uid="uid://cwq6jbgk6orm8"]
 
 [ext_resource type="Script" uid="uid://cfddqj00n4haa" path="res://scripts/connecticut.gd" id="1_e0833"]
 [ext_resource type="Script" uid="uid://bc35g37mj0fjh" path="res://scripts/movement.gd" id="1_egu30"]
 [ext_resource type="PackedScene" uid="uid://1soblptoyj0l" path="res://raycon.tscn" id="2_jc4xq"]
-[ext_resource type="Texture2D" uid="uid://2hedec18wjv3" path="res://images/MC/gun.png" id="3_05gsd"]
+[ext_resource type="Texture2D" uid="uid://ba7vd6fa8geuh" path="res://images/MC/gun.png" id="3_05gsd"]
 [ext_resource type="Texture2D" uid="uid://cobbviohjhbju" path="res://images/MC/midsection.png" id="3_8qaqc"]
-[ext_resource type="Texture2D" uid="uid://bxdb87hv5i52q" path="res://images/MC/fist2.png" id="3_81xla"]
+[ext_resource type="Texture2D" uid="uid://dcxuc84ues0y0" path="res://images/MC/fist2.png" id="3_81xla"]
 [ext_resource type="PackedScene" uid="uid://1n8rddvfkh3t" path="res://engine.tscn" id="6_tu81x"]
-[ext_resource type="Texture2D" uid="uid://dqemj7o1ybehg" path="res://images/MC/clankmid.png" id="7_d5dtm"]
+[ext_resource type="Texture2D" uid="uid://bm2xdix1fkwct" path="res://images/MC/clankmid.png" id="7_d5dtm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8e4ew"]
 size = Vector2(16, 39)
@@ -132,6 +132,82 @@ tracks/1/keys = {
 "values": [0.0, 0.3141592653589793]
 }
 
+[sub_resource type="Animation" id="Animation_12a4l"]
+resource_name = "Fly"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RFist:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.93333334, 1.2333333, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(17, 15), Vector2(18.08, -58.9), Vector2(0, -40.275), Vector2(0, -28.96)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LFist:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-17, 15), Vector2(-0.495, 15)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("RFist:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.93333334, 1.2333333, 1.9666667),
+"transitions": PackedFloat32Array(1, 7.210002, 1, 0.125),
+"update": 0,
+"values": [0.0, -2.452187599052033, -3.141592653589793, -3.141592653589793]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("LFist:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.93333334, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Engine:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.93333334, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 22), Vector2(0, 22), Vector2(0, 4.055)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("LFist/Node2D2:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1e-05),
+"update": 0,
+"values": [Vector2(0.5, -4), Vector2(0.5, -32.605)]
+}
+
 [sub_resource type="Animation" id="Animation_1qt55"]
 resource_name = "LeftPunch"
 length = 0.2
@@ -234,6 +310,18 @@ tracks/5/keys = {
 "update": 0,
 "values": [0.0]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("LFist/Node2D2:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5, -4)]
+}
 
 [sub_resource type="Animation" id="Animation_8e4ew"]
 resource_name = "RightPunch"
@@ -270,6 +358,7 @@ resource_name = "Stretch"
 _data = {
 &"EngineTurnLeft": SubResource("Animation_05gsd"),
 &"EngineTurnRight": SubResource("Animation_xf0ge"),
+&"Fly": SubResource("Animation_12a4l"),
 &"LeftPunch": SubResource("Animation_1qt55"),
 &"RESET": SubResource("Animation_d5dtm"),
 &"RightPunch": SubResource("Animation_8e4ew"),
@@ -287,11 +376,11 @@ height = 80.0
 script = ExtResource("1_egu30")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["Player"]]
+visible = false
 position = Vector2(0, 37)
 shape = SubResource("RectangleShape2D_8e4ew")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-visible = false
 position = Vector2(2, -3)
 enabled = false
 zoom = Vector2(3.475, 3.475)
@@ -306,16 +395,18 @@ offset = Vector2(0, 10.075)
 metadata/_edit_group_ = true
 
 [node name="Node2D2" type="Node2D" parent="RFist"]
-position = Vector2(0.5, -4)
+position = Vector2(2.3841858e-07, -2.449998)
 rotation = -1.5707964
 
 [node name="sp" type="Node2D" parent="RFist"]
 position = Vector2(0, 21.25)
 
 [node name="Area2D" type="Area2D" parent="RFist" groups=["Player"]]
+visible = false
 collision_mask = 3
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="RFist/Area2D" groups=["Player"]]
+visible = false
 position = Vector2(0, 8.499998)
 scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("RectangleShape2D_xf0ge")
@@ -324,6 +415,7 @@ shape = SubResource("RectangleShape2D_xf0ge")
 texture_filter = 1
 position = Vector2(-17, 15)
 sprite_frames = SubResource("SpriteFrames_egu30")
+metadata/_edit_group_ = true
 
 [node name="Node2D2" type="Node2D" parent="LFist"]
 position = Vector2(0.5, -4)
@@ -334,8 +426,10 @@ position = Vector2(0.5, -0.75)
 shape = SubResource("RectangleShape2D_05gsd")
 
 [node name="Midsection" type="AnimatedSprite2D" parent="."]
+z_index = 1
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_tu81x")
+metadata/_edit_group_ = true
 
 [node name="Node2D" type="Node2D" parent="Midsection"]
 position = Vector2(11, -7)
@@ -375,6 +469,7 @@ position = Vector2(0, 13)
 rotation = -1.5707964
 
 [node name="Area2D" type="Area2D" parent="Midsection" groups=["Player"]]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Midsection/Area2D" groups=["Player"]]
 position = Vector2(0, 0.5)
@@ -411,11 +506,13 @@ handle_mode_b = 1
 line_width = 0.0
 
 [node name="CollisionShape" type="CollisionShape2D" parent="Engine" groups=["Player"]]
+visible = false
 position = Vector2(0, 30)
 scale = Vector2(2, 2)
 shape = SubResource("RectangleShape2D_tu81x")
 
 [node name="HitArea" type="Area2D" parent="." groups=["Player"]]
+visible = false
 collision_mask = 15
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea" groups=["Player"]]

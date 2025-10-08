@@ -287,3 +287,7 @@ func hitByBullet(velocity):
 	hp-=1
 	print("hitByBullet")
 	print("hp"+str(hp))
+	
+func airFight():
+	gravity=0
+	$AnimationPlayer.play("Fly")
